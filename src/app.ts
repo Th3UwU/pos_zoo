@@ -1,4 +1,2 @@
-import { app, BrowserWindow } from 'electron';
-import Main from './Main';
-
-Main.main(app, BrowserWindow);
+import Main from './main';
+let main: Main = new Main();

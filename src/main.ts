@@ -1,35 +1,33 @@
-import { BrowserWindow } from 'electron';
+import { app, BrowserWindow } from 'electron';
+import Window from './window'
 
-export default class Main {
-    static mainWindow: Electron.BrowserWindow;
-    static application: Electron.App;
-    static BrowserWindow;
-    private static onWindowAllClosed() {
-        if (process.platform !== 'darwin') {
-            Main.application.quit();
-        }
-    }
+class Main {
 
-    private static onClose() {
-        // Dereference the window object. 
-        Main.mainWindow = null;
-    }
+	window: BrowserWindow;
 
-    private static onReady() {
-        Main.mainWindow = new Main.BrowserWindow({ width: 800, height: 600 });
-        Main.mainWindow
-            .loadURL('file://' + __dirname + '/index.html');
-        Main.mainWindow.on('closed', Main.onClose);
-    }
+	constructor() {
+		app.on('window-all-closed', this.onWindowAllClosed.bind(this));
+		app.on('ready', this.onReady.bind(this));
+		console.log(this);
+	}
+	
+	onWindowAllClosed() {
+		app.quit()
+	}
 
-    static main(app: Electron.App, browserWindow: typeof BrowserWindow) {
-        // we pass the Electron.App object and the  
-        // Electron.BrowserWindow into this function 
-        // so this class has no dependencies. This 
-        // makes the code easier to write tests for 
-        Main.BrowserWindow = browserWindow;
-        Main.application = app;
-        Main.application.on('window-all-closed', Main.onWindowAllClosed);
-        Main.application.on('ready', Main.onReady);
-    }
+	onClose() {
+		this.window = null;
+		console.log("Closing window\n");
+	}
+
+	onReady() {
+		this.window = new BrowserWindow({width: 800, height: 600});
+		this.window.loadURL('https://www.google.com');
+		
+		this.window.on('closed', this.onClose.bind(this));
+
+		let prueba: Window = new Window("Prueba", 800, 600, "algo.html", this.window);
+	}
 }
+
+export default Main;
