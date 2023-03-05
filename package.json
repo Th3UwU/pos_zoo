@@ -1,0 +1,17 @@
+{
+  "name": "pos_zoo",
+  "version": "1.0.0",
+  "description": "Punto de venta (POS) para el Zoologico de Guadalajara",
+  "scripts": {
+    "start": "tsc --build && electron dist/app.js",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/electron": "^1.6.10",
+    "typescript": "^4.9.5"
+  }
+}
