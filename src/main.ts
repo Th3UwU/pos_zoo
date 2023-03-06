@@ -8,7 +8,7 @@ class Main {
 	constructor() {
 		app.on('window-all-closed', this.onWindowAllClosed.bind(this));
 		app.on('ready', this.onReady.bind(this));
-		console.log(this);
+		process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 	}
 	
 	onWindowAllClosed() {
@@ -17,7 +17,7 @@ class Main {
 
 	onClose() {
 		this.window = null;
-		console.log("Closing window\n");
+		console.log('Closing window\n');
 	}
 
 	onReady() {
@@ -26,7 +26,7 @@ class Main {
 		
 		this.window.on('closed', this.onClose.bind(this));
 
-		let prueba: Window = new Window("Prueba", 800, 600, "algo.html", this.window);
+		let loginWindow: Window = new Window(800, 600, '../src/gui/login.html', this.window);
 	}
 }
 
