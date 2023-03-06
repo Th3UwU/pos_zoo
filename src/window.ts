@@ -30,7 +30,7 @@ export default class Window {
 	}
 
 	onClose() {
-		console.log(`Closing window`);
+		console.log(`Closing window: ${this.window.title}`);
 	}
 
 	onClosed() {

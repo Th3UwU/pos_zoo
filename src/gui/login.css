@@ -1,3 +1,4 @@
 html {
+	user-select: none;
 	background-color: aqua;
 }
