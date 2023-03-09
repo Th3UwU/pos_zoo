@@ -1,4 +1,38 @@
-html {
+html, body {
 	user-select: none;
-	background-color: aqua;
+	height: 100%;
+	width: 100%;
+	margin: 0;
+}
+
+body * {
+	display: block;
+}
+
+@font-face {
+	font-family: 'mononoki';
+	font-weight: normal;
+	font-style: normal;
+	src: url('../../res/font/mononoki-Regular.ttf');
+}
+
+@font-face {
+	font-family: 'mononoki';
+	font-weight: bold;
+	font-style: normal;
+	src: url('../../res/font/mononoki-Bold.ttf');
+}
+
+@font-face {
+	font-family: 'mononoki';
+	font-weight: normal;
+	font-style: italic;
+	src: url('../../res/font/mononoki-Italic.ttf');
+}
+
+@font-face {
+	font-family: 'mononoki';
+	font-weight: bold;
+	font-style: italic;
+	src: url('../../res/font/mononoki-BoldItalic.ttf');
 }

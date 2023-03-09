@@ -12,7 +12,7 @@ class Main {
 	}
 	
 	onWindowAllClosed() {
-		app.quit()
+		app.quit();
 	}
 
 	onClose() {
@@ -21,12 +21,13 @@ class Main {
 	}
 
 	onReady() {
-		this.window = new BrowserWindow({width: 800, height: 600});
-		this.window.loadURL('https://www.google.com');
-		
-		this.window.on('closed', this.onClose.bind(this));
+
+		// this.window = new BrowserWindow({width: 800, height: 600});
+		// this.window.loadURL('https://www.google.com');
+		// this.window.on('closed', this.onClose.bind(this));
 
 		let loginWindow: Window = new Window(800, 600, '../src/gui/login.html', this.window);
+		loginWindow.window.fullScreen = true;
 	}
 }
 
