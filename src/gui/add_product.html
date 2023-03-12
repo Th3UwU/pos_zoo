@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<title>Iniciar sesión</title>
+		<link rel="stylesheet" href="./add_product.css" type="text/css">
+	</head>
+	<body>
+		<div id="container">
+			<label for="name">Nombre</label>
+			<input id="name" type="text"></input>
+
+			<label for="description">Descripción</label>
+			<input id="description" type="text"></input>
+
+			<label for="price">Precio</label>
+			<input id="price" type="text"></input>
+
+			<label for="category">Categoría</label>
+			<input id="category" type="text"></input>
+
+			<label for="stock">stock</label>
+			<input id="stock" type="text"></input>
+
+			<label for="maxStock">stock maximo</label>
+			<input id="maxStock" type="text"></input>
+			
+			<label for="localLimit">limite local</label>
+			<input id="localLimit" type="text"></input>
+
+			<label for="image">imagen</label>
+			<input id="image" type="text"></input>
+			<button id="buttonImage" type="button">Seleccionar imagen...</button>
+			<img id="imagePreview" src="" alt="preview" style="display: none;">
+		</div>
+	</body>
+	<script style="display: none;">
+		require("./add_product.js")
+	</script>
+</html>

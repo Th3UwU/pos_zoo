@@ -29,7 +29,7 @@ class Main {
 
 	onReady() {
 
-		let loginWindow: Window = new Window(800, 600, 'gui/login.html', this.window);
+		let loginWindow: Window = new Window(800, 600, 'gui/add_product.html', this.window);
 		loginWindow.window.fullScreen = true;
 	}
 }
