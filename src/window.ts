@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron';
+import { enable } from '@electron/remote/main'
 
 export default class Window {
 	window: BrowserWindow;
@@ -13,9 +14,11 @@ export default class Window {
 			show: false,
 			webPreferences:
 			{
+				plugins: true,
 				nodeIntegration: true,
 				contextIsolation: false,
-				webSecurity: false
+				webSecurity: false,
+				backgroundThrottling: false
 			}
 		});
 
@@ -27,6 +30,8 @@ export default class Window {
 			this.window.show();
 			this.window.webContents.openDevTools();
 		});
+
+		enable(this.window.webContents);
 	}
 
 	onClose() {

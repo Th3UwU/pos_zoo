@@ -1,3 +1,8 @@
-import { format } from "util";
+import { getCurrentWindow } from '@electron/remote'
+import { alertMessage } from '../misc';
 
-console.log(format('Hola\n'));
+let buttonLogin = document.getElementById('buttonLogin') as HTMLButtonElement;
+buttonLogin.addEventListener('click', () => {
+	alertMessage(getCurrentWindow(), {title: "Error", message: "No existe el usuario ingresado", type: "error"});
+	//getCurrentWindow().minimize();
+});

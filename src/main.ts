@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from 'electron';
+import { initialize } from '@electron/remote/main'
 import Window from './window'
 
 class Main {
@@ -9,6 +10,8 @@ class Main {
 		app.on('window-all-closed', this.onWindowAllClosed.bind(this));
 		app.on('ready', this.onReady.bind(this));
 		process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+
+		initialize();
 	}
 	
 	onWindowAllClosed() {
@@ -21,10 +24,6 @@ class Main {
 	}
 
 	onReady() {
-
-		// this.window = new BrowserWindow({width: 800, height: 600});
-		// this.window.loadURL('https://www.google.com');
-		// this.window.on('closed', this.onClose.bind(this));
 
 		let loginWindow: Window = new Window(800, 600, 'gui/login.html', this.window);
 		loginWindow.window.fullScreen = true;
