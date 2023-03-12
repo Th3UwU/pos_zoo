@@ -1,5 +1,9 @@
-import { getCurrentWindow } from '@electron/remote'
+import { getCurrentWindow, getGlobal } from '@electron/remote'
 import { alertMessage } from '../misc';
+import Main from '../main';
+
+let main: Main = getGlobal('main');
+console.log(main.myPass);
 
 let buttonLogin = document.getElementById('buttonLogin') as HTMLButtonElement;
 buttonLogin.addEventListener('click', () => {

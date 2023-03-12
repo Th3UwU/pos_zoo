@@ -1,2 +1,3 @@
 import Main from './main';
-let main: Main = new Main();
+global.main = new Main();
+// let main: Main = new Main();

@@ -6,12 +6,16 @@ class Main {
 
 	window: BrowserWindow;
 
+	myPass: string;
+
 	constructor() {
 		app.on('window-all-closed', this.onWindowAllClosed.bind(this));
 		app.on('ready', this.onReady.bind(this));
 		process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 		initialize();
+
+		this.myPass = "UwU";
 	}
 	
 	onWindowAllClosed() {
