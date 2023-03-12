@@ -26,7 +26,7 @@ class Main {
 		// this.window.loadURL('https://www.google.com');
 		// this.window.on('closed', this.onClose.bind(this));
 
-		let loginWindow: Window = new Window(800, 600, '../src/gui/login.html', this.window);
+		let loginWindow: Window = new Window(800, 600, 'gui/login.html', this.window);
 		loginWindow.window.fullScreen = true;
 	}
 }
