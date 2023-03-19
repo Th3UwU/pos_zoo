@@ -2,6 +2,26 @@ import { getCurrentWindow, dialog } from '@electron/remote';
 import { OpenDialogOptions } from 'electron';
 import { readFileSync } from 'fs';
 
+const categories: string[] = [
+	'libro',
+	'juguete',
+	'ropa',
+	'souvenir',
+	'papeleria',
+	'peluche',
+	'accesorio',
+	'artesania',
+	'otro'
+];
+
+let categorySelect = document.getElementById('category') as HTMLSelectElement;
+for (const c of categories) {
+	let option = document.createElement('option') as HTMLOptionElement;
+	option.value = c;
+	option.text = c;
+	categorySelect.add(option);
+}
+
 const dialogOpenOptions: OpenDialogOptions = {title: 'Elegir imagen', properties: ['openFile']};
 
 let inputImage = document.getElementById('image') as HTMLInputElement;
