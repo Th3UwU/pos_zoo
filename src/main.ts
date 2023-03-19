@@ -17,6 +17,11 @@ class Main {
 
 		this.myPass = "UwU";
 	}
+
+	createWindow(width: number, height: number, source: string, parent: BrowserWindow = null): Window {
+		let window: Window = new Window(width, height, source, parent);
+		return window;
+	}
 	
 	onWindowAllClosed() {
 		app.quit();
@@ -29,7 +34,7 @@ class Main {
 
 	onReady() {
 
-		let loginWindow: Window = new Window(800, 600, 'gui/add_product.html', this.window);
+		let loginWindow: Window = this.createWindow(800, 600, 'gui/add_product.html', this.window);
 		loginWindow.window.fullScreen = true;
 	}
 }

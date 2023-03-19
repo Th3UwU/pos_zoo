@@ -1,6 +1,10 @@
-import { getCurrentWindow, dialog } from '@electron/remote';
+import { getCurrentWindow, dialog, BrowserWindow, getGlobal } from '@electron/remote';
 import { OpenDialogOptions } from 'electron';
 import { readFileSync } from 'fs';
+import Main from '../main';
+import Window from '../window';
+
+let main: Main = getGlobal('main');
 
 const categories: string[] = [
 	'libro',
@@ -21,6 +25,11 @@ for (const c of categories) {
 	option.text = c;
 	categorySelect.add(option);
 }
+
+let buttonSupplier = document.getElementById('buttonSupplier') as HTMLButtonElement;
+buttonSupplier.addEventListener('click', () => {
+	main.createWindow(800, 600, 'gui/select.html', getCurrentWindow());
+});
 
 const dialogOpenOptions: OpenDialogOptions = {title: 'Elegir imagen', properties: ['openFile']};
 
