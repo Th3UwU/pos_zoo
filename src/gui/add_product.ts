@@ -28,7 +28,7 @@ for (const c of categories) {
 
 let buttonSupplier = document.getElementById('buttonSupplier') as HTMLButtonElement;
 buttonSupplier.addEventListener('click', () => {
-	main.createWindow(800, 600, 'gui/select.html', getCurrentWindow());
+	main.createWindow(800, 600, 'gui/selectSupplier.html', getCurrentWindow());
 });
 
 const dialogOpenOptions: OpenDialogOptions = {title: 'Elegir imagen', properties: ['openFile']};
