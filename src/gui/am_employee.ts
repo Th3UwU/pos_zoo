@@ -38,15 +38,15 @@ let nss = document.getElementById('nss') as HTMLInputElement;
 let buttonAccept = document.getElementById('buttonAccept') as HTMLButtonElement;
 buttonAccept.addEventListener('click', async (): Promise<void> => {
 
-
-	let CVRaw: string = (dialogResult == undefined) ? (null) : (readFileSync(dialogResult[0], null).toString('base64'));
-	if (!CVRaw)
-		alertMessage(getCurrentWindow(), {title: "Error", message: "Ingrese la ruta del CV (PDF)", type: "error"});
-	else
-	{
+	try {
+		let CVRaw: string = readFileSync(inputCV.value, null).toString('base64');
 		let query: string = `INSERT INTO EMPLOYEE VALUES((SELECT MAX(ID_EMPLOYEE) FROM EMPLOYEE) + 1, '${pass.value}', '${curp.value}', '${first_name.value}', '${last_name.value}', '${address.value}', '${nss.value}', (DECODE('${CVRaw}', 'base64')), DEFAULT);`;
 		console.log(query);
 		await main.querySQL(query);
+
+	} catch (error: any) {
+		console.log(error);
+		alertMessage(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
 	}
 
 });
