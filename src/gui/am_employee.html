@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<title>Agregar producto</title>
+		<link rel="stylesheet" href="./am_employee.css" type="text/css">
+	</head>
+	<body>
+		<div id="container">
+			<label for="pass">Contraseña</label>
+			<input id="pass" type="text"></input>
+			
+			<label for="curp">CURP</label>
+			<input id="curp" type="text"></input>
+
+			<label for="first_name">Nombre(s)</label>
+			<input id="first_name" type="text"></input>
+
+			<label for="last_name">Apellidos</label>
+			<input id="last_name" type="text"></input>
+
+			<label for="address">Domicilio</label>
+			<input id="address" type="text"></input>
+
+			<label for="nss">NSS</label>
+			<input id="nss" type="text"></input>
+
+			<label for="cv">CV (PDF)</label>
+			<input id="cv" type="text"></input>
+			<button id="buttonCV" type="button">Seleccionar CV...</button>
+
+			<label for="status">Estatus</label>
+			<input id="status" type="checkbox" name="status" checked>
+
+			<button id="buttonAccept" type="button">Aceptar</button>
+			<button id="buttonCancel" type="button">Cancelar</button>
+		</div>
+	</body>
+	<script style="display: none;">
+		require("./am_employee.js")
+	</script>
+</html>

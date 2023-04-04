@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<title>Agregar producto</title>
+		<link rel="stylesheet" href="./am_store.css" type="text/css">
+	</head>
+	<body>
+		<div id="container">
+			<label for="location">Ubicación</label>
+			<input id="location" type="text"></input>
+			
+			<label for="type">Tipo</label>
+			<select id="type" name="type"></select>
+
+			<label for="hours">Horario</label>
+			<input id="hours" type="text"></input>
+			
+			<label for="status">Estatus</label>
+			<input id="status" type="checkbox" name="status" checked>
+
+			<button id="buttonAccept" type="button">Aceptar</button>
+			<button id="buttonCancel" type="button">Cancelar</button>
+		</div>
+	</body>
+	<script style="display: none;">
+		require("./am_store.js")
+	</script>
+</html>
