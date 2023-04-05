@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<title>Agregar proveedor</title>
+		<link rel="stylesheet" href="./am_supplier.css" type="text/css">
+	</head>
+	<body>
+		<div id="container">
+			<label for="name">Nombre</label>
+			<input id="name" type="text"></input>
+
+			<label for="address">Domicilio</label>
+			<input id="address" type="text"></input>
+			
+			<label for="tel">Teléfono</label>
+			<input id="tel" type="text"></input>
+
+			<label for="image">Imagen (Logo)</label>
+			<input id="image" type="text"></input>
+			<button id="buttonImage" type="button">Seleccionar imagen...</button>
+			<img id="imagePreview" src="" alt="preview" style="display: none;">
+
+			<label for="status">Estatus</label>
+			<input id="status" type="checkbox" name="status" checked>
+
+			<button id="buttonAccept" type="button">Aceptar</button>
+			<button id="buttonCancel" type="button">Cancelar</button>
+		</div>
+	</body>
+	<script style="display: none;">
+		require("./am_supplier.js")
+	</script>
+</html>
