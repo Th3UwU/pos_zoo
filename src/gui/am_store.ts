@@ -1,7 +1,5 @@
-import { getCurrentWindow, dialog, BrowserWindow, getGlobal } from '@electron/remote';
-import { OpenDialogOptions } from 'electron';
+import { getCurrentWindow, dialog, getGlobal } from '@electron/remote';
 import Main from '../main';
-import Window from '../window';
 
 let main: Main = getGlobal('main');
 
@@ -30,8 +28,15 @@ let hours = document.getElementById('hours') as HTMLInputElement;
 let buttonAccept = document.getElementById('buttonAccept') as HTMLButtonElement;
 buttonAccept.addEventListener('click', async (): Promise<void> => {
 
-	let query = `INSERT INTO STORE VALUES((SELECT MAX(ID_STORE) FROM STORE) + 1, '${location.value}', '${type.value}', '${hours.value}', DEFAULT);`;
-	console.log(query);
-	await main.querySQL(query);
+	try {
+		let query = `INSERT INTO STORE VALUES((SELECT MAX(ID_STORE) FROM STORE) + 1, '${location.value}', '${type.value}', '${hours.value}', DEFAULT);`;
+		console.log(query);
+		await main.querySQL(query);
+
+	} catch (error: any) {
+		console.log(error);
+		dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+	}
+
 });
 //

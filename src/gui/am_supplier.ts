@@ -1,7 +1,6 @@
 import { getCurrentWindow, dialog, BrowserWindow, getGlobal } from '@electron/remote';
 import { OpenDialogOptions } from 'electron';
 import { readFileSync } from 'fs';
-import { alertMessage } from '../misc';
 import Main from '../main';
 
 let main: Main = getGlobal('main');
@@ -42,7 +41,7 @@ buttonAccept.addEventListener('click', async (): Promise<void> => {
 
 	} catch (error: any) {
 		console.log(error);
-		alertMessage(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+		dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
 	}
 
 });
