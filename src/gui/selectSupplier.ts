@@ -9,6 +9,7 @@ let parent: Electron.BrowserWindow = getCurrentWindow().getParentWindow();
 let supplierContainer = document.getElementById('container') as HTMLDivElement;
 let supplierTemplate = <HTMLTemplateElement>document.getElementById("templateSupplier");
 
+// Get all suppliers
 async function refreshSuppliers(): Promise<void> {
 	let suppliers: QueryResult<any> = await main.querySQL(`SELECT * FROM SUPPLIER WHERE id_supplier > 0;`);
 
@@ -18,6 +19,13 @@ async function refreshSuppliers(): Promise<void> {
 		supplierInstance.querySelector('.id_supplier').innerHTML = supp.id_supplier;
 		supplierInstance.querySelector('.name').innerHTML = supp.name;
 		supplierInstance.querySelector('.tel').innerHTML = supp.tel;
+
+		if (supp.image)
+		{
+			let imagePreview = supplierInstance.querySelector('.image') as HTMLImageElement;
+			imagePreview.src = URL.createObjectURL(new Blob([supp.image.buffer], {type: "image/png"}));
+			imagePreview.style.display = 'block';
+		}
 
 		supplierInstance.querySelector('button').addEventListener('click', () => {
 			
