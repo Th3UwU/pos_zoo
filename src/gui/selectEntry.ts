@@ -29,11 +29,7 @@ async function refreshEntries(): Promise<void> {
 	}
 	retrieveQuery = retrieveQuery.slice(0, -2);
 	retrieveQuery += ` FROM ${aux.selectEntryColumn} WHERE id_${aux.selectEntryColumn} > 0;`;
-
-	console.log(retrieveQuery);
 	let entries: QueryResult<any> = await main.querySQL(retrieveQuery);
-
-	console.log(entries);
 
 	// Append every entry
 	for (let i = 0; i < entries.rows.length; i++) {
@@ -45,48 +41,42 @@ async function refreshEntries(): Promise<void> {
 			// BYTEA (We assume is an image)
 			if (entries.fields[j].dataTypeID == 17)
 			{
+				// Not null
+				if (entries.rows[i][entries.fields[j].name])
+				{
+					let imagePreview = document.createElement('img') as HTMLImageElement;
+					imagePreview.src = URL.createObjectURL(new Blob([entries.rows[i][entries.fields[j].name].buffer], {type: "image/png"}));
+					imagePreview.style.display = 'block';
 
+					template.appendChild(imagePreview);
+				}
 			}
 			else
 			{
 				let span = document.createElement('span') as HTMLSpanElement;
-				span.innerHTML = entries.rows[i][visibleColumns[j]];
+				span.innerHTML = entries.rows[i][entries.fields[j].name];
 				template.appendChild(span);
 			}
 		}
 
+		// Button
+		let button = document.createElement('button') as HTMLButtonElement;
+		button.innerHTML = 'Seleccionar';
+		button.addEventListener('click', (): void => {
+
+			let code: string = 
+			`
+				document.getElementById('${aux.returnInputID}').value = '${entries.rows[i][visibleColumns[0]]}';
+			`
+
+			parent.webContents.executeJavaScript(code);
+			getCurrentWindow().close();
+
+		});
+		template.appendChild(button);
+
+		// Append entry
 		container.appendChild(template);
-
-
-
-		
-
-
-		
-		// let supplierInstance = <HTMLDivElement>(supplierTemplate).content.cloneNode(true);
-		// supplierInstance.querySelector('.id_supplier').innerHTML = supp.id_supplier;
-		// supplierInstance.querySelector('.name').innerHTML = supp.name;
-		// supplierInstance.querySelector('.tel').innerHTML = supp.tel;
-
-		// if (supp.image)
-		// {
-		// 	let imagePreview = supplierInstance.querySelector('.image') as HTMLImageElement;
-		// 	imagePreview.src = URL.createObjectURL(new Blob([supp.image.buffer], {type: "image/png"}));
-		// 	imagePreview.style.display = 'block';
-		// }
-
-		// supplierInstance.querySelector('button').addEventListener('click', () => {
-			
-		// 	let code: string = 
-		// 	`
-		// 		document.getElementById('supplier').value = '${supp.id_supplier}';
-		// 	`
-			
-		// 	parent.webContents.executeJavaScript(code);
-		// 	getCurrentWindow().close();
-		// });
-
-		
 	}
 }
 refreshEntries();
