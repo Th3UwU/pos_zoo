@@ -16,6 +16,8 @@ class Main {
 
 		initialize();
 
+		global.aux = {action: 'm', id: 2};
+
 		this.myPass = "UwU";
 	}
 
@@ -64,7 +66,7 @@ class Main {
 
 		this.connectDB();
 
-		let loginWindow: Window = this.createWindow(800, 600, 'gui/am_product.html', this.window);
+		let loginWindow: Window = this.createWindow(800, 600, 'gui/am_store.html', this.window);
 		loginWindow.window.fullScreen = true;
 	}
 }
