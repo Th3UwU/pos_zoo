@@ -27,7 +27,11 @@ for (const c of categories) {
 
 let buttonSupplier = document.getElementById('buttonSupplier') as HTMLButtonElement;
 buttonSupplier.addEventListener('click', () => {
-	main.createWindow(800, 600, 'gui/selectSupplier.html', getCurrentWindow());
+
+	main.setAux({action: 'a', id: -1, selectEntryColumn: 'supplier'});
+	console.log(getGlobal('aux'));
+	main.createWindow(800, 600, 'gui/selectEntry.html', getCurrentWindow());
+	
 });
 
 // Image

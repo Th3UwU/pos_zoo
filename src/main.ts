@@ -16,9 +16,15 @@ class Main {
 
 		initialize();
 
-		global.aux = {action: 'm', id: 2};
+		//global.aux = {action: 'a', id: -1, selectEntryColumn: 'SUPPLIER'};
 
 		this.myPass = "UwU";
+
+
+		// fixme
+		let sis: boolean = true;
+		let str: string = `UPDATE STORE SET NAME = 'wea fome'` + ((sis) ? (`, IMAGE = ALGO;`) : (`;`));
+		console.log(str);
 	}
 
 	async connectDB() {
@@ -51,6 +57,10 @@ class Main {
 	async querySQL(query: string): Promise<QueryResult<any>> {
 		return (await this.client.query(query));
 	}
+
+	setAux(aux: any): void {
+		global.aux = aux;
+	}
 	
 	onWindowAllClosed() {
 		this.disconnectDB();
@@ -66,7 +76,7 @@ class Main {
 
 		this.connectDB();
 
-		let loginWindow: Window = this.createWindow(800, 600, 'gui/am_store.html', this.window);
+		let loginWindow: Window = this.createWindow(800, 600, 'gui/am_product.html', this.window);
 		loginWindow.window.fullScreen = true;
 	}
 }
