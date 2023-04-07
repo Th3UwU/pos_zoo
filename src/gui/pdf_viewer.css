@@ -1,0 +1,10 @@
+html, body {
+	margin: 0;
+	height: 100%;
+}
+
+iframe {
+	height:calc(100vh - 4px);
+	width:calc(100vw - 4px);
+	box-sizing: border-box;
+}
