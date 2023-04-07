@@ -3,6 +3,7 @@ import { QueryResult } from 'pg';
 import Main from '../main';
 
 let main: Main = getGlobal('main');
+let aux: any = getGlobal('aux');
 
 let parent: Electron.BrowserWindow = getCurrentWindow().getParentWindow();
 
@@ -11,9 +12,9 @@ let container = document.getElementById('container') as HTMLDivElement;
 // Get all entries
 async function refreshEntries(): Promise<void> {
 
-	let aux: any = getGlobal('aux');
 
 	// Columns to retrieve
+	console.log(aux);
 	let visibleColumns: string[];
 	switch (aux.selectEntryColumn) {
 

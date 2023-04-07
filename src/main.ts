@@ -16,7 +16,8 @@ class Main {
 
 		initialize();
 
-		//global.aux = {action: 'a', id: -1, selectEntryColumn: 'SUPPLIER'};
+		// global.aux = {action: 'a', id: -1, selectEntryColumn: 'supplier', returnInputID: 'supplier'};
+		global.aux = {action: 'a', id: -1};
 
 		this.myPass = "UwU";
 
@@ -58,8 +59,8 @@ class Main {
 		return (await this.client.query(query));
 	}
 
-	setAux(aux: any): void {
-		global.aux = aux;
+	setAux(newAux: any): void {
+		global.aux = newAux;
 	}
 	
 	onWindowAllClosed() {

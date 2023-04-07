@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 import Main from '../main';
 
 let main: Main = getGlobal('main');
+let aux: any = getGlobal('aux');
 
 const categories: string[] = [
 	'libro',
@@ -28,14 +29,26 @@ for (const c of categories) {
 let buttonSupplier = document.getElementById('buttonSupplier') as HTMLButtonElement;
 buttonSupplier.addEventListener('click', () => {
 
-	main.setAux({action: 'a', id: -1, selectEntryColumn: 'supplier', returnInputID: 'supplier'});
-	console.log(getGlobal('aux'));
+	let newAux = {...aux, selectEntryColumn: 'supplier', returnInputID: 'supplier'};
+	main.setAux(newAux);
+
 	main.createWindow(800, 600, 'gui/selectEntry.html', getCurrentWindow());
 	
 });
 
-// Image
+// Add new product
+let name = document.getElementById('name') as HTMLInputElement;
+let description = document.getElementById('description') as HTMLInputElement;
+let price = document.getElementById('price') as HTMLInputElement;
+let category = document.getElementById('category') as HTMLInputElement;
+let stock = document.getElementById('stock') as HTMLInputElement;
+let maxStock = document.getElementById('maxStock') as HTMLInputElement;
+let localLimit = document.getElementById('localLimit') as HTMLInputElement;
+let supplier = document.getElementById('supplier') as HTMLInputElement;
 let imagePath = document.getElementById('image') as HTMLInputElement;
+let status = document.getElementById('status') as HTMLInputElement;
+
+// Image preview
 let buttonImage = document.getElementById('buttonImage') as HTMLButtonElement;
 let imagePreview = document.getElementById('imagePreview') as HTMLImageElement;
 
@@ -53,28 +66,33 @@ buttonImage.addEventListener('click', () => {
 	}
 });
 
-// Add new product
-let name = document.getElementById('name') as HTMLInputElement;
-let description = document.getElementById('description') as HTMLInputElement;
-let price = document.getElementById('price') as HTMLInputElement;
-let category = document.getElementById('category') as HTMLInputElement;
-let stock = document.getElementById('stock') as HTMLInputElement;
-let maxStock = document.getElementById('maxStock') as HTMLInputElement;
-let localLimit = document.getElementById('localLimit') as HTMLInputElement;
-let supplier = document.getElementById('supplier') as HTMLInputElement;
-
+// Button accept
 let buttonAccept = document.getElementById('buttonAccept') as HTMLButtonElement;
-buttonAccept.addEventListener('click', async (): Promise<void> => {
 
-	try {
-		let imageRaw: string = readFileSync(imagePath.value, null).toString('base64');
-		let query: string = `INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, '${supplier.value}', '${name.value}', '${description.value}', '${price.value}', '${category.value}', '${stock.value}', '${maxStock.value}', '${localLimit.value}', DEFAULT, (DECODE('${imageRaw}', 'base64')));`;
-		console.log(query);
-		await main.querySQL(query);
+async function MAIN(): Promise<void> {
 
-	} catch (error: any) {
-		console.log(error);
-		dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+	// Add new store
+	if (aux.action == 'a')
+	{
+		buttonAccept.addEventListener('click', async (): Promise<void> => {
+
+			try {
+				let imageRaw: string = readFileSync(imagePath.value, null).toString('base64');
+				let query: string = `INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, '${supplier.value}', '${name.value}', '${description.value}', '${price.value}', '${category.value}', '${stock.value}', '${maxStock.value}', '${localLimit.value}', DEFAULT, (DECODE('${imageRaw}', 'base64')));`;
+				console.log(query);
+				await main.querySQL(query);
+		
+			} catch (error: any) {
+				console.log(error);
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+			}
+		
+		});
+	}
+	else if (aux.action == 'm')
+	{
+
 	}
 
-});
+}
+MAIN();
