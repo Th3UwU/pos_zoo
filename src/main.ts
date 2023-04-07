@@ -17,7 +17,7 @@ class Main {
 		initialize();
 
 		// global.aux = {action: 'a', id: -1, selectEntryColumn: 'supplier', returnInputID: 'supplier'};
-		global.aux = {action: 'a', id: -1};
+		global.aux = {action: 'm', id: 1};
 
 		this.myPass = "UwU";
 

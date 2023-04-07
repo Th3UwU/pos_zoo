@@ -71,7 +71,7 @@ let buttonAccept = document.getElementById('buttonAccept') as HTMLButtonElement;
 
 async function MAIN(): Promise<void> {
 
-	// Add new store
+	// Add new product
 	if (aux.action == 'a')
 	{
 		buttonAccept.addEventListener('click', async (): Promise<void> => {
@@ -89,8 +89,59 @@ async function MAIN(): Promise<void> {
 		
 		});
 	}
+	// Add product
 	else if (aux.action == 'm')
 	{
+		// Get entry to modify
+		let product: any = (await main.querySQL(`SELECT * FROM PRODUCT WHERE id_product = ${aux.id};`)).rows[0];
+
+		// Populate inputs with existing info
+		name.value = product.name;
+		description.value = product.description;
+		price.value = product.price;
+
+		for (let i = 0; i < categories.length; i++)
+			if (categories[i] == product.category) categorySelect.selectedIndex = i;
+
+		stock.value = product.stock;
+		maxStock.value = product.max_stock;
+		localLimit.value = product.local_limit;
+		supplier.value = product.fk_supplier;
+
+		if (product.image) {
+
+			imagePreview.src = URL.createObjectURL(new Blob([product.image.buffer], {type: "image/png"}));
+			imagePreview.style.display = 'block';
+		}
+
+		status.checked = product.status;
+
+		// Button event
+		buttonAccept.addEventListener('click', async (): Promise<void> => {
+		
+			try {
+				
+				let imageRaw: string = null;
+				if (imagePath.value != "")
+					imageRaw = readFileSync(imagePath.value, null).toString('base64');
+
+				let query =
+				`UPDATE PRODUCT SET
+				fk_supplier = '${supplier.value}', name = '${name.value}', description = '${description.value}',
+				price = '${price.value}', category = '${category.value}', stock = '${stock.value}',
+				max_stock = '${maxStock.value}', local_limit = '${localLimit.value}', status = '${status.checked}'`
+				+ ((imageRaw) ? (`, image = (DECODE('${imageRaw}', 'base64')) WHERE id_product = ${aux.id};`) : (` WHERE id_product = ${aux.id};`));
+				
+
+				console.log(query);
+				await main.querySQL(query);
+		
+			} catch (error: any) {
+				console.log(error);
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+			}
+		
+		});
 
 	}
 
