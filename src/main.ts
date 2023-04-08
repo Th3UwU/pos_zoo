@@ -17,7 +17,7 @@ class Main {
 		initialize();
 
 		// global.aux = {action: 'a', id: -1, selectEntryColumn: 'supplier', returnInputID: 'supplier'};
-		global.aux = {action: 'a', id: -1};
+		global.aux = {action: 'm', id: 5};
 
 		this.myPass = "UwU";
 
@@ -77,7 +77,7 @@ class Main {
 
 		this.connectDB();
 
-		let loginWindow: Window = this.createWindow(800, 600, 'gui/am_employee.html', this.window);
+		let loginWindow: Window = this.createWindow(800, 600, 'gui/am_supplier.html', this.window);
 		loginWindow.window.fullScreen = true;
 	}
 }

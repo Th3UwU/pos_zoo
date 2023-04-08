@@ -32,7 +32,7 @@ buttonSupplier.addEventListener('click', () => {
 	let newAux = {...aux, selectEntryColumn: 'supplier', returnInputID: 'supplier'};
 	main.setAux(newAux);
 
-	main.createWindow(800, 600, 'gui/selectEntry.html', getCurrentWindow());
+	main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
 	
 });
 
@@ -89,7 +89,7 @@ async function MAIN(): Promise<void> {
 		
 		});
 	}
-	// Add product
+	// Modify product
 	else if (aux.action == 'm')
 	{
 		// Get entry to modify
