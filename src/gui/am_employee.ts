@@ -28,7 +28,21 @@ let firstName = document.getElementById('first_name') as HTMLInputElement;
 let lastName = document.getElementById('last_name') as HTMLInputElement;
 let address = document.getElementById('address') as HTMLInputElement;
 let nss = document.getElementById('nss') as HTMLInputElement;
+let role = document.getElementById('role') as HTMLSelectElement;
 let status = document.getElementById('status') as HTMLInputElement;
+
+// Employee roles
+const roles: string[] = [
+	'ventas',
+	'gerente de ventas'
+];
+
+for (const r of roles) {
+	let option = document.createElement('option') as HTMLOptionElement;
+	option.value = r;
+	option.text = r;
+	role.add(option);
+}
 
 let buttonAccept = document.getElementById('buttonAccept') as HTMLButtonElement;
 
@@ -43,7 +57,7 @@ async function MAIN(): Promise<void> {
 				let CVRaw: string = readFileSync(CVPath.value, null).toString('base64');
 				let query: string = `INSERT INTO EMPLOYEE VALUES((SELECT MAX(ID_EMPLOYEE) FROM EMPLOYEE) + 1,
 				'${pass.value}', '${curp.value}', '${firstName.value}', '${lastName.value}',
-				'${address.value}', '${nss.value}', (DECODE('${CVRaw}', 'base64')), DEFAULT);`;
+				'${address.value}', '${nss.value}', '${role.value}', (DECODE('${CVRaw}', 'base64')), DEFAULT);`;
 				console.log(query);
 				await main.querySQL(query);
 		
@@ -81,6 +95,9 @@ async function MAIN(): Promise<void> {
 		address.value = employee.address;
 		nss.value = employee.nss;
 
+		for (let i = 0; i < roles.length; i++)
+			if (roles[i] == employee.role) role.selectedIndex = i;
+
 		// CV Preview
 		buttonCVPreview.addEventListener('click', (): void => {
 
@@ -103,6 +120,30 @@ async function MAIN(): Promise<void> {
 
 		status.checked = employee.status;
 
+		// Button event
+		buttonAccept.addEventListener('click', async (): Promise<void> => {
+
+			try {
+				let CVRaw: string = null;
+				if (CVPath.value != "")
+					CVRaw = readFileSync(CVPath.value, null).toString('base64');
+
+				let query =
+				`UPDATE EMPLOYEE SET
+				pass = '${pass.value}', curp = '${curp.value}', first_name = '${firstName.value}',
+				last_name = '${lastName.value}', address = '${address.value}', nss = '${nss.value}',
+				role = '${role.value}', status = '${status.checked}'`
+				+ ((CVRaw) ? (`, cv = (DECODE('${CVRaw}', 'base64')) WHERE id_employee = ${aux.id};`) : (` WHERE id_employee = ${aux.id};`));
+
+				console.log(query);
+				await main.querySQL(query);
+		
+			} catch (error: any) {
+				console.log(error);
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+			}
+		
+		});
 	}
 }
 MAIN();

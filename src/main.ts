@@ -5,7 +5,7 @@ import Window from './window'
 
 type Credentials = {
 	idEmployee: number;
-	employeeType: string;
+	role: string;
 	idStore: number;
 };
 
@@ -13,7 +13,12 @@ class Main {
 
 	window: BrowserWindow;
 	client: Client;
-	credentials: Credentials;
+
+	credentials = <Credentials>({
+		idEmployee: 0,
+		role: '',
+		idStore: 0
+	 });
 
 	constructor() {
 		app.on('window-all-closed', this.onWindowAllClosed.bind(this));
@@ -23,7 +28,7 @@ class Main {
 		initialize();
 
 		// global.aux = {action: 'a', id: -1, selectEntryColumn: 'supplier', returnInputID: 'supplier'};
-		global.aux = {action: 'm', id: 5};
+		global.aux = {action: 'm', id: 1};
 	}
 
 	async connectDB() {
@@ -59,6 +64,10 @@ class Main {
 
 	setAux(newAux: any): void {
 		global.aux = newAux;
+	}
+
+	setCredentials(newCredentials: Credentials) {
+		this.credentials = newCredentials;
 	}
 	
 	onWindowAllClosed() {

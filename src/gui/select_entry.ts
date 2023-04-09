@@ -19,7 +19,11 @@ async function refreshEntries(): Promise<void> {
 	switch (aux.selectEntryColumn) {
 
 		case "supplier":
-			visibleColumns = ['id_supplier', 'name', 'tel', 'image']
+			visibleColumns = ['id_supplier', 'name', 'tel', 'image'];
+			break;
+
+		case "store":
+			visibleColumns = ['id_store', 'location', 'type', 'hours'];
 			break;
 	}
 
