@@ -33,7 +33,12 @@ buttonLogin.addEventListener('click', async (): Promise<void> => {
 		if (user.pass != pass.value)
 			throw {message: "La contraseña es incorrecta"};
 
+		// Set credentials
 		main.setProperty({idEmployee: user.id_employee, role: user.role, idStore: parseInt(store.value)}, 'credentials');
+
+		// Open menu window and close this window
+		main.createWindow(1280, 720, 'gui/menu.html', null);
+		getCurrentWindow().close();
 	}
 	catch (error: any) {
 		console.log(error);

@@ -14,9 +14,12 @@ async function refreshEntries(): Promise<void> {
 
 
 	// Columns to retrieve
-	console.log(aux);
 	let visibleColumns: string[];
 	switch (aux.selectEntryColumn) {
+
+		case "product":
+			visibleColumns = ['id_product', 'name', 'price', 'image'];
+			break;
 
 		case "supplier":
 			visibleColumns = ['id_supplier', 'name', 'tel', 'image'];

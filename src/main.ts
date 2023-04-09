@@ -85,7 +85,7 @@ class Main {
 		this.connectDB();
 
 		let loginWindow: Window = this.createWindow(800, 600, 'gui/login.html', this.window);
-		loginWindow.window.fullScreen = true;
+		// loginWindow.window.fullScreen = true;
 	}
 }
 
