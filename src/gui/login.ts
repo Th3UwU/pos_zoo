@@ -13,7 +13,7 @@ let buttonStore = document.getElementById('buttonStore') as HTMLButtonElement;
 buttonStore.addEventListener('click', () => {
 
 	let newAux = {...aux, selectEntryColumn: 'store', returnInputID: 'store'};
-	main.setAux(newAux);
+	main.setGlobal(newAux, 'aux');
 
 	main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
 	
@@ -33,8 +33,7 @@ buttonLogin.addEventListener('click', async (): Promise<void> => {
 		if (user.pass != pass.value)
 			throw {message: "La contraseña es incorrecta"};
 
-		main.setCredentials({idEmployee: user.id_employee, role: user.role, idStore: parseInt(store.value)});
-
+		main.setProperty({idEmployee: user.id_employee, role: user.role, idStore: parseInt(store.value)}, 'credentials');
 	}
 	catch (error: any) {
 		console.log(error);

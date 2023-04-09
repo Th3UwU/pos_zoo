@@ -62,12 +62,12 @@ class Main {
 		return (await this.client.query(query));
 	}
 
-	setAux(newAux: any): void {
-		global.aux = newAux;
+	setGlobal(value: any, name: string) {
+		global[name] = value;
 	}
 
-	setCredentials(newCredentials: Credentials) {
-		this.credentials = newCredentials;
+	setProperty(value: any, name: string) {
+		this[name] = value;
 	}
 	
 	onWindowAllClosed() {

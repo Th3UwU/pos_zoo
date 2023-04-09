@@ -73,7 +73,7 @@ async function MAIN(): Promise<void> {
 
 			if (CVPath.value != "") {
 				let newAux = {...aux, url: CVPath.value};
-				main.setAux(newAux);
+				main.setGlobal(newAux, 'aux');
 				main.createWindow(800, 600, 'gui/pdf_viewer.html', getCurrentWindow());
 			}
 			else {
@@ -103,14 +103,14 @@ async function MAIN(): Promise<void> {
 
 			if (CVPath.value != "") {
 				let newAux = {...aux, url: CVPath.value};
-				main.setAux(newAux);
+				main.setGlobal(newAux, 'aux');
 				main.createWindow(800, 600, 'gui/pdf_viewer.html', getCurrentWindow());
 			}
 			else if (employee.cv) {
 				let pdfFileUrl = URL.createObjectURL(new Blob([employee.cv.buffer], {type: 'application/pdf'}));
 
 				let newAux = {...aux, url: pdfFileUrl};
-				main.setAux(newAux);
+				main.setGlobal(newAux, 'aux');
 				main.createWindow(800, 600, 'gui/pdf_viewer.html', getCurrentWindow());
 			}
 			else {

@@ -42,7 +42,7 @@ let buttonSupplier = document.getElementById('buttonSupplier') as HTMLButtonElem
 buttonSupplier.addEventListener('click', () => {
 
 	let newAux = {...aux, selectEntryColumn: 'supplier', returnInputID: 'supplier'};
-	main.setAux(newAux);
+	main.setGlobal(newAux, 'aux');
 
 	main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
 	
