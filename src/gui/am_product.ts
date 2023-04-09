@@ -6,6 +6,18 @@ import Main from '../main';
 let main: Main = getGlobal('main');
 let aux: any = getGlobal('aux');
 
+let name = document.getElementById('name') as HTMLInputElement;
+let description = document.getElementById('description') as HTMLInputElement;
+let price = document.getElementById('price') as HTMLInputElement;
+let category = document.getElementById('category') as HTMLSelectElement;
+let stock = document.getElementById('stock') as HTMLInputElement;
+let maxStock = document.getElementById('maxStock') as HTMLInputElement;
+let localLimit = document.getElementById('localLimit') as HTMLInputElement;
+let supplier = document.getElementById('supplier') as HTMLInputElement;
+let imagePath = document.getElementById('image') as HTMLInputElement;
+let status = document.getElementById('status') as HTMLInputElement;
+
+// Select category
 const categories: string[] = [
 	'libro',
 	'juguete',
@@ -18,14 +30,14 @@ const categories: string[] = [
 	'otro'
 ];
 
-let categorySelect = document.getElementById('category') as HTMLSelectElement;
 for (const c of categories) {
 	let option = document.createElement('option') as HTMLOptionElement;
 	option.value = c;
 	option.text = c;
-	categorySelect.add(option);
+	category.add(option);
 }
 
+// Select supplier
 let buttonSupplier = document.getElementById('buttonSupplier') as HTMLButtonElement;
 buttonSupplier.addEventListener('click', () => {
 
@@ -35,18 +47,6 @@ buttonSupplier.addEventListener('click', () => {
 	main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
 	
 });
-
-// Add new product
-let name = document.getElementById('name') as HTMLInputElement;
-let description = document.getElementById('description') as HTMLInputElement;
-let price = document.getElementById('price') as HTMLInputElement;
-let category = document.getElementById('category') as HTMLInputElement;
-let stock = document.getElementById('stock') as HTMLInputElement;
-let maxStock = document.getElementById('maxStock') as HTMLInputElement;
-let localLimit = document.getElementById('localLimit') as HTMLInputElement;
-let supplier = document.getElementById('supplier') as HTMLInputElement;
-let imagePath = document.getElementById('image') as HTMLInputElement;
-let status = document.getElementById('status') as HTMLInputElement;
 
 // Image preview
 let buttonImage = document.getElementById('buttonImage') as HTMLButtonElement;
@@ -101,7 +101,7 @@ async function MAIN(): Promise<void> {
 		price.value = product.price;
 
 		for (let i = 0; i < categories.length; i++)
-			if (categories[i] == product.category) categorySelect.selectedIndex = i;
+			if (categories[i] == product.category) category.selectedIndex = i;
 
 		stock.value = product.stock;
 		maxStock.value = product.max_stock;
