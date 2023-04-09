@@ -21,14 +21,35 @@ async function refreshEntries(): Promise<void> {
 			visibleColumns = ['id_product', 'name', 'price', 'image'];
 			break;
 
+		case "store":
+			visibleColumns = ['id_store', 'location', 'type', 'hours'];
+			break;
+
 		case "supplier":
 			visibleColumns = ['id_supplier', 'name', 'tel', 'image'];
 			break;
 
-		case "store":
-			visibleColumns = ['id_store', 'location', 'type', 'hours'];
+		case "sale":
+			visibleColumns = ['id_sale'];
 			break;
-	}
+
+		case "purchase":
+			visibleColumns = ['id_purchase'];
+			break;
+
+		case "return":
+			visibleColumns = ['id_return'];
+			break;
+
+		case "order":
+			visibleColumns = ['id_order'];
+			break;
+
+		case "employee":
+			visibleColumns = ['id_employee', 'first_name', 'role'];
+			break;
+
+	};
 
 	// Retrieve entries
 	let retrieveQuery: string = `SELECT `;
