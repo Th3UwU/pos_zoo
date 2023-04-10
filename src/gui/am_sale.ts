@@ -28,7 +28,14 @@ async function MAIN(): Promise<void> {
 		let idProduct = document.getElementById('idProduct') as HTMLInputElement;
 		let productList = document.getElementById('productList') as HTMLDivElement;
 
-		// Seleccionar producto
+		// Shopping cart
+		type ShoppingCart = {
+			idProduct: number;
+			amount: number;
+		};
+		let shoppingCart: ShoppingCart[] = [];
+
+		// Select product
 		buttonSelectProduct.addEventListener('click', (): void => {
 
 			main.setGlobal({...aux, selectEntryColumn: 'product', returnInputID: 'idProduct'}, 'aux');
@@ -38,20 +45,58 @@ async function MAIN(): Promise<void> {
 		// Add product to list		
 		buttonAddProduct.addEventListener('click', async (): Promise<void> => {
 
-			let productEntry: any = (await main.querySQL(`SELECT * FROM PRODUCT WHERE id_product = ${idProduct.value};`)).rows[0];
-			let productInstance = <HTMLDivElement>(templateProduct).content.cloneNode(true);
-			productInstance.querySelector('.productId').innerHTML = productEntry.id_product;
-			productInstance.querySelector('.name').innerHTML = productEntry.name;
-			(productInstance.querySelector('.amount') as HTMLInputElement).value = '1';
+			// Check if it's already in shopping cart
+			let added: number = -1;
+			for (let i = 0; i < shoppingCart.length; i++) {
+				if (shoppingCart[i].idProduct == parseInt(idProduct.value))
+				{
+					added = i;
+					break;
+				}
+			}
 
-			// Remove element from list event
-			(productInstance.querySelector('.buttonDelete') as HTMLButtonElement).addEventListener('click', (event: any): void => {
-				
-				event.target.parentElement.remove()
-			});
-			productList.appendChild(productInstance);
+			if (added != -1)
+			{
 
+				// Increase in array (shopping cart)
+				shoppingCart[added].amount++;
 
+				// Increase in the input element
+				let productListItems = document.getElementsByClassName('product') as HTMLCollectionOf<HTMLDivElement>;
+				for (const item of productListItems) {
+
+					if (item.querySelector('.productId').innerHTML == idProduct.value) {
+						(item.querySelector('.amount') as HTMLInputElement).value = shoppingCart[added].amount.toString();
+					}
+				}
+			}
+			else
+			{
+				let productEntry: any = (await main.querySQL(`SELECT * FROM PRODUCT WHERE id_product = ${idProduct.value};`)).rows[0];
+				let productInstance = <HTMLDivElement>(templateProduct).content.cloneNode(true);
+				productInstance.querySelector('.productId').innerHTML = productEntry.id_product;
+				productInstance.querySelector('.name').innerHTML = productEntry.name;
+				(productInstance.querySelector('.amount') as HTMLInputElement).value = '1';
+	
+				// Remove element from list event
+				(productInstance.querySelector('.buttonDelete') as HTMLButtonElement).addEventListener('click', (event: any): void => {
+					
+					// Delete from array (shopping cart)
+					for (let i = 0; i < shoppingCart.length; i++) {
+
+						if (shoppingCart[i].idProduct == parseInt(productInstance.querySelector('.productId').innerHTML))
+							shoppingCart.splice(i, 1);
+					}
+
+					// Delete from DOM
+					event.target.parentElement.remove()
+				});
+				productList.appendChild(productInstance);
+
+				shoppingCart.push({idProduct: parseInt(idProduct.value), amount: 1});
+			}
+
+			console.log(shoppingCart);
 		});
 	}
 	// Modify sale
