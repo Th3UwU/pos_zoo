@@ -19,6 +19,12 @@ let hours = document.getElementById('hours') as HTMLInputElement;
 let status = document.getElementById('status') as HTMLInputElement;
 
 let buttonAccept = document.getElementById('buttonAccept') as HTMLButtonElement;
+let buttonCancel = document.getElementById('buttonCancel') as HTMLButtonElement;
+
+buttonCancel.addEventListener('click', (): void => {
+
+	getCurrentWindow().close();
+});
 
 // Populate select input (type)
 for (const t of types) {

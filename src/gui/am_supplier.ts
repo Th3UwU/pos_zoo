@@ -30,9 +30,13 @@ buttonImage.addEventListener('click', () => {
 	}
 });
 
-// Add new supplier
 let buttonAccept = document.getElementById('buttonAccept') as HTMLButtonElement;
+let buttonCancel = document.getElementById('buttonCancel') as HTMLButtonElement;
 
+buttonCancel.addEventListener('click', (): void => {
+
+	getCurrentWindow().close();
+});
 
 async function MAIN(): Promise<void> {
 	// Add new supplier

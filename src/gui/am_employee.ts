@@ -45,6 +45,12 @@ for (const r of roles) {
 }
 
 let buttonAccept = document.getElementById('buttonAccept') as HTMLButtonElement;
+let buttonCancel = document.getElementById('buttonCancel') as HTMLButtonElement;
+
+buttonCancel.addEventListener('click', (): void => {
+
+	getCurrentWindow().close();
+});
 
 async function MAIN(): Promise<void> {
 	
