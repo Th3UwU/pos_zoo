@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<title>Agregar producto</title>
+		<link rel="stylesheet" href="./am_sale.css" type="text/css">
+	</head>
+	<body>
+		<div id="container">
+
+			<div class="section", id="section_product">
+
+				<label for="idProduct">ID: </label>
+				<input id="idProduct" type="text"></input>
+				<button id="buttonSelectProduct" type="button">Seleccionar...</button>
+				<button id="buttonAddProduct" type="button">Agregar</button>
+
+				<template id="templateProduct">
+					<div class="product">
+						<span class="productId">ID</span>
+						<span class="name">Nombre</span>
+						<label>Cantidad<input class="amount" type="number" min="1"></label>
+						<button class="buttonDelete" type="button">Eliminar</button>
+					</div>
+				</template>
+
+				<div id="productList"></div>
+
+				<button class="buttonAccept" id="buttonAccept1" type="button">Aceptar</button>
+				<button class="buttonCancel" type="button">Cancelar</button>
+			</div>
+
+		</div>
+	</body>
+	<script style="display: none;">
+		require("./am_sale.js")
+	</script>
+</html>
