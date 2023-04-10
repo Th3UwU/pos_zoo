@@ -45,30 +45,20 @@ async function MAIN(): Promise<void> {
 		// Add product to list		
 		buttonAddProduct.addEventListener('click', async (): Promise<void> => {
 
-			// Check if it's already in shopping cart
-			let added: number = -1;
-			for (let i = 0; i < shoppingCart.length; i++) {
-				if (shoppingCart[i].idProduct == parseInt(idProduct.value))
-				{
-					added = i;
-					break;
-				}
+			// Check if it's already in the list
+			let added: HTMLDivElement = null;
+			let productListItems = document.getElementsByClassName('product') as HTMLCollectionOf<HTMLDivElement>;
+			for (const item of productListItems) {
+
+				if (item.querySelector('.productId').innerHTML == idProduct.value)
+					added = item;
 			}
 
-			if (added != -1)
+			if (added)
 			{
-
-				// Increase in array (shopping cart)
-				shoppingCart[added].amount++;
-
-				// Increase in the input element
-				let productListItems = document.getElementsByClassName('product') as HTMLCollectionOf<HTMLDivElement>;
-				for (const item of productListItems) {
-
-					if (item.querySelector('.productId').innerHTML == idProduct.value) {
-						(item.querySelector('.amount') as HTMLInputElement).value = shoppingCart[added].amount.toString();
-					}
-				}
+				// Increase amount in the input element
+				let amount = added.querySelector('.amount') as HTMLInputElement;
+				amount.value = (parseInt(amount.value) + 1).toString();
 			}
 			else
 			{
@@ -80,23 +70,13 @@ async function MAIN(): Promise<void> {
 	
 				// Remove element from list event
 				(productInstance.querySelector('.buttonDelete') as HTMLButtonElement).addEventListener('click', (event: any): void => {
-					
-					// Delete from array (shopping cart)
-					for (let i = 0; i < shoppingCart.length; i++) {
-
-						if (shoppingCart[i].idProduct == parseInt(productInstance.querySelector('.productId').innerHTML))
-							shoppingCart.splice(i, 1);
-					}
 
 					// Delete from DOM
 					event.target.parentElement.remove()
 				});
 				productList.appendChild(productInstance);
-
-				shoppingCart.push({idProduct: parseInt(idProduct.value), amount: 1});
 			}
 
-			console.log(shoppingCart);
 		});
 	}
 	// Modify sale
