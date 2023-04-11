@@ -38,6 +38,10 @@ export default class Window {
 		console.log(`Closing window: ${this.window.title}`);
 	}
 
+	setOnClose(callback: () => void) {
+		this.onClose = callback;
+	}
+
 	onClosed() {
 		this.window = null;
 	}
