@@ -12,7 +12,7 @@ let store = document.getElementById('store') as HTMLInputElement;
 let buttonStore = document.getElementById('buttonStore') as HTMLButtonElement;
 buttonStore.addEventListener('click', () => {
 
-	let newAux = {...aux, selectEntryColumn: 'store', returnInputID: 'store'};
+	let newAux = {...aux, selectEntryColumn: 'store', returnInput: `document.getElementById('store')`};
 	main.setGlobal(newAux, 'aux');
 
 	main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());

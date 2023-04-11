@@ -49,7 +49,7 @@ async function MAIN(): Promise<void> {
 		// Select product button
 		buttonSelectProduct.addEventListener('click', (): void => {
 
-			main.setGlobal({...aux, selectEntryColumn: 'product', returnInputID: 'idProduct'}, 'aux');
+			main.setGlobal({...aux, selectEntryColumn: 'product', returnInput: `document.getElementById('idProduct')`}, 'aux');
 			main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
 		});
 
@@ -219,7 +219,7 @@ async function refreshSaleModifyInputs(): Promise<void> {
 	// Select employee button
 	(document.getElementById('buttonEmployee') as HTMLButtonElement).addEventListener('click', async (): Promise<void> => {
 
-		main.setGlobal({...aux, selectEntryColumn: 'employee', returnInputID: 'idEmployee'}, 'aux');
+		main.setGlobal({...aux, selectEntryColumn: 'employee', returnInput: `document.getElementById('idEmployee')`}, 'aux');
 		main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
 	});
 
@@ -232,19 +232,31 @@ async function refreshSaleModifyInputs(): Promise<void> {
 	let templateDetail = (document.getElementById('templateDetail') as HTMLTemplateElement).content.querySelector('div');
 	let saleDetailEntry = (await main.querySQL(`SELECT * FROM SALE_DETAIL WHERE fk_sale = ${aux.id};`)).rows;
 
-	for (const d of saleDetailEntry) {
+	for (let i = 0; i < saleDetailEntry.length; i++) {
 
 		let detail: HTMLDivElement = document.importNode(templateDetail, true);
-		let product = (await main.querySQL(`SELECT * FROM PRODUCT WHERE id_product = ${d.fk_product};`)).rows[0];
+		detail.id = `detail_${i}`;
+
+		let product = (await main.querySQL(`SELECT * FROM PRODUCT WHERE id_product = ${saleDetailEntry[i].fk_product};`)).rows[0];
 
 		(detail.querySelector('.name') as HTMLSpanElement).innerHTML = `Producto: ${product.name}`;
-		(detail.querySelector('.idProduct') as HTMLInputElement).value = `${d.fk_product}`;
-		(detail.querySelector('.amount') as HTMLInputElement).value = `${d.amount}`;
-		(detail.querySelector('.cost') as HTMLInputElement).value = `${d.cost}`;
+		(detail.querySelector('.idProduct') as HTMLInputElement).value = `${saleDetailEntry[i].fk_product}`;
+		(detail.querySelector('.amount') as HTMLInputElement).value = `${saleDetailEntry[i].amount}`;
+		(detail.querySelector('.cost') as HTMLInputElement).value = `${saleDetailEntry[i].cost}`;
 		(detail.querySelector('.buttonProduct') as HTMLButtonElement).addEventListener('click', (): void => {
 
-			main.setGlobal({...aux, selectEntryColumn: 'employee', returnInputID: `detail.querySelector('.name')`}, 'aux');
-			main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
+			// let onCloseCode =
+			// `
+			// 	let parent = this.window.getParentWindow();
+			// 	parent.webContents.executeJavaScript('console.log("AAAAA");');
+			// 	console.log('HELP ME!');
+			// `;
+
+			main.setGlobal({...aux, selectEntryColumn: 'product', returnInput: `document.getElementById('detail_${i}').querySelector('.idProduct')`}, 'aux');
+			let selectEntryWindow = main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
+			// selectEntryWindow.setOnClose(onCloseCode);
+
+
 		});
 
 		detailCointainer.appendChild(detail);

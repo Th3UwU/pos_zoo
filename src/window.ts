@@ -3,6 +3,7 @@ import { enable } from '@electron/remote/main'
 
 export default class Window {
 	window: BrowserWindow;
+	onCloseCode: string = null;
 
 	constructor(width: number, height: number, source: string, parent: BrowserWindow = null) {
 
@@ -36,10 +37,15 @@ export default class Window {
 
 	onClose() {
 		console.log(`Closing window: ${this.window.title}`);
+		if (this.onCloseCode)
+		{
+			console.log('Executing custom code');
+			eval(this.onCloseCode);
+		}
 	}
 
-	setOnClose(callback: () => void) {
-		this.onClose = callback;
+	setOnClose(code: string) {
+		this.onCloseCode = code;
 	}
 
 	onClosed() {

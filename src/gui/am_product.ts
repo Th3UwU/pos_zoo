@@ -41,7 +41,7 @@ for (const c of categories) {
 let buttonSupplier = document.getElementById('buttonSupplier') as HTMLButtonElement;
 buttonSupplier.addEventListener('click', () => {
 
-	let newAux = {...aux, selectEntryColumn: 'supplier', returnInputID: 'supplier'};
+	let newAux = {...aux, selectEntryColumn: 'supplier', returnInput: `document.getElementById('supplier')`};
 	main.setGlobal(newAux, 'aux');
 
 	main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());

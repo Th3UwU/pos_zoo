@@ -5,8 +5,6 @@ import Main from '../main';
 let main: Main = getGlobal('main');
 let aux: any = getGlobal('aux');
 
-let parent: Electron.BrowserWindow = getCurrentWindow().getParentWindow();
-
 let container = document.getElementById('container') as HTMLDivElement;
 
 // Get all entries
@@ -95,9 +93,10 @@ async function refreshEntries(): Promise<void> {
 
 			let code: string = 
 			`
-				document.getElementById('${aux.returnInputID}').value = '${entries.rows[i][visibleColumns[0]]}';
+				${aux.returnInput}.value = '${entries.rows[i][visibleColumns[0]]}';
 			`
 
+			let parent: Electron.BrowserWindow = getCurrentWindow().getParentWindow();
 			parent.webContents.executeJavaScript(code);
 			getCurrentWindow().close();
 

@@ -27,7 +27,7 @@ class Main {
 
 		initialize();
 
-		// global.aux = {action: 'a', id: -1, selectEntryColumn: 'supplier', returnInputID: 'supplier'};
+		// global.aux = {action: 'a', id: -1, selectEntryColumn: '', returnInputID: ''};
 		global.aux = {action: 'm', id: 1};
 	}
 
