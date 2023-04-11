@@ -21,7 +21,7 @@ async function MAIN(): Promise<void> {
 	if (aux.action == 'a')
 	{
 		let templateProduct = document.getElementById('templateProduct') as HTMLTemplateElement;
-		let sectionProduct = document.getElementById('section_product') as HTMLDivElement;
+		let section_product = document.getElementById('section_product') as HTMLDivElement;
 		let buttonSelectProduct = document.getElementById('buttonSelectProduct') as HTMLButtonElement;
 		let buttonAddProduct = document.getElementById('buttonAddProduct') as HTMLButtonElement;
 		let buttonAccept1 = document.getElementById('buttonAccept1') as HTMLButtonElement;
@@ -35,20 +35,20 @@ async function MAIN(): Promise<void> {
 		};
 		let shoppingCart: ShoppingCart[] = [];
 
-		// Select product
+		// Select product button
 		buttonSelectProduct.addEventListener('click', (): void => {
 
 			main.setGlobal({...aux, selectEntryColumn: 'product', returnInputID: 'idProduct'}, 'aux');
 			main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
 		});
 
-		// Add product to list		
+		// Add product to list	
 		buttonAddProduct.addEventListener('click', async (): Promise<void> => {
 
 			// Check if it's already in the list
 			let added: HTMLDivElement = null;
-			let productListItems = document.getElementsByClassName('product') as HTMLCollectionOf<HTMLDivElement>;
-			for (const item of productListItems) {
+			let addedProducts = document.getElementsByClassName('product') as HTMLCollectionOf<HTMLDivElement>;
+			for (const item of addedProducts) {
 
 				if (item.querySelector('.productId').innerHTML == idProduct.value)
 					added = item;
@@ -77,6 +77,51 @@ async function MAIN(): Promise<void> {
 				productList.appendChild(productInstance);
 			}
 
+		});
+
+		// Accept button1 (section_product -> section_total)
+		buttonAccept1.addEventListener('click', async (): Promise<void> => {
+
+			// Get shopping cart
+			let addedProducts = document.getElementsByClassName('product') as HTMLCollectionOf<HTMLDivElement>;
+			for (const p of addedProducts) {
+
+				shoppingCart.push({idProduct: parseInt(p.querySelector('.productId').innerHTML), amount: parseInt((p.querySelector('.amount') as HTMLInputElement).value)});
+			}
+
+			// Change section
+			document.getElementById('section_product').style.display = 'none';
+			document.getElementById('section_total').style.display = 'block';
+
+			// Populate "section_total" with the actual shopping cart
+			let section_total = document.getElementById('section_total');
+			let total: number = 0;
+
+			for (const p of shoppingCart) {
+
+				let productEntry: any = (await main.querySQL(`SELECT * FROM PRODUCT WHERE id_product = ${p.idProduct};`)).rows[0];
+
+				let i = document.createElement('div') as HTMLDivElement;
+
+				let name = document.createElement('span') as HTMLSpanElement;
+				name.innerHTML = productEntry.name;
+				i.appendChild(name);
+				
+				let amount = document.createElement('span') as HTMLSpanElement;
+				amount.innerHTML = `Cantidad: ${p.amount}`;
+				i.appendChild(amount);
+
+				let totalProduct = document.createElement('span') as HTMLSpanElement;
+				totalProduct.innerHTML = `Costo: ${parseInt(productEntry.price) * p.amount}`;
+				i.appendChild(totalProduct);
+				
+				section_total.querySelector('.products').appendChild(i);
+
+				total += parseInt(productEntry.price) * p.amount;
+			}
+
+			section_total.querySelector('.total').innerHTML = `Total: $${total}`;
+			console.log(shoppingCart);
 		});
 	}
 	// Modify sale
