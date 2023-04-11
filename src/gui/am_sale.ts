@@ -1,6 +1,7 @@
 import { getCurrentWindow, dialog, BrowserWindow, getGlobal } from '@electron/remote';
 import { OpenDialogOptions } from 'electron';
 import Main from '../main';
+import { Query } from 'pg';
 
 let main: Main = getGlobal('main');
 let aux: any = getGlobal('aux');
@@ -24,9 +25,16 @@ async function MAIN(): Promise<void> {
 		let section_product = document.getElementById('section_product') as HTMLDivElement;
 		let buttonSelectProduct = document.getElementById('buttonSelectProduct') as HTMLButtonElement;
 		let buttonAddProduct = document.getElementById('buttonAddProduct') as HTMLButtonElement;
-		let buttonAccept1 = document.getElementById('buttonAccept1') as HTMLButtonElement;
 		let idProduct = document.getElementById('idProduct') as HTMLInputElement;
 		let productList = document.getElementById('productList') as HTMLDivElement;
+		
+		// Accept buttons
+		let buttonAccept1 = document.getElementById('buttonAccept1') as HTMLButtonElement;
+		let buttonAccept2 = document.getElementById('buttonAccept2') as HTMLButtonElement;
+		let buttonAccept3 = document.getElementById('buttonAccept3') as HTMLButtonElement;
+
+		// Total cost (number)
+		let total: number = 0;
 
 		// Shopping cart
 		type ShoppingCart = {
@@ -95,7 +103,6 @@ async function MAIN(): Promise<void> {
 
 			// Populate "section_total" with the actual shopping cart
 			let section_total = document.getElementById('section_total');
-			let total: number = 0;
 
 			for (const p of shoppingCart) {
 
@@ -122,6 +129,72 @@ async function MAIN(): Promise<void> {
 
 			section_total.querySelector('.total').innerHTML = `Total: $${total}`;
 			console.log(shoppingCart);
+		});
+
+		// Accept button2 (section_total -> section_ticket)
+		buttonAccept2.addEventListener('click', async (): Promise<void> => {
+
+			// Register on DB!!
+			let idSale: number = (await main.querySQL(`SELECT MAX(ID_SALE) FROM SALE;`)).rows[0].max;
+			idSale++;
+
+			//// SALE HEADER ////
+			let query: string = `INSERT INTO SALE VALUES(${idSale}, ${main.credentials.idEmployee}, DEFAULT);`;
+			console.log(query);
+			main.querySQL(query);
+
+			//// SALE DETAILS ////
+			for (const p of shoppingCart) {
+
+				let productEntry: any = (await main.querySQL(`SELECT * FROM PRODUCT WHERE id_product = ${p.idProduct};`)).rows[0];
+				query = `INSERT INTO SALE_DETAIL VALUES((SELECT MAX(ID_SALE_DETAIL) FROM SALE_DETAIL) + 1, ${idSale}, ${p.idProduct}, ${p.amount}, ${productEntry.price});`;
+				console.log(query);
+				main.querySQL(query);
+			}
+
+			// Change section
+			document.getElementById('section_total').style.display = 'none';
+			document.getElementById('section_ticket').style.display = 'block';
+
+			// Generate ticket
+			let section_ticket = document.getElementById('section_ticket').querySelector('.ticket') as HTMLDivElement;
+
+			let header = document.createElement('span') as HTMLSpanElement;
+			header.innerHTML = 'ZOOLÓGICO DE GUADALAJARA';
+			section_ticket.appendChild(header);
+
+			let storeEntry: any = (await main.querySQL(`SELECT * FROM STORE WHERE id_store = ${main.credentials.idStore};`)).rows[0];
+			let storeInfo = document.createElement('span') as HTMLSpanElement;
+			storeInfo.innerHTML = `${storeEntry.type}, ubicado en: ${storeEntry.location}`;
+			section_ticket.appendChild(storeInfo);
+
+			let idSaleInfo = document.createElement('span') as HTMLSpanElement;
+			idSaleInfo.innerHTML = `FOLIO: ${idSale}`;
+			section_ticket.appendChild(idSaleInfo);
+
+			let employeeEntry = (await main.querySQL(`SELECT first_name FROM EMPLOYEE WHERE id_employee = ${main.credentials.idEmployee};`)).rows[0];
+			let dateEmployeeInfo = document.createElement('span') as HTMLSpanElement;
+			const date = new Date();
+			dateEmployeeInfo.innerHTML = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} Atendido por: ${employeeEntry.first_name}`;
+			section_ticket.appendChild(dateEmployeeInfo);
+
+			for (const p of shoppingCart) {
+
+				let productEntry: any = (await main.querySQL(`SELECT * FROM PRODUCT WHERE id_product = ${p.idProduct};`)).rows[0];
+				let item = document.createElement('span') as HTMLSpanElement;
+				item.innerHTML = `${p.amount} X ${productEntry.name} ---------- ${productEntry.price * p.amount}`;
+				section_ticket.appendChild(item);
+			}
+
+			let totalInfo = document.createElement('span') as HTMLSpanElement;
+			totalInfo.innerHTML = `TOTAL: ${total}`;
+			section_ticket.appendChild(totalInfo);
+		});
+
+		// Accept button3 (section_ticket -> CLOSE_WINDOW)
+		buttonAccept3.addEventListener('click', async (): Promise<void> => {
+
+			getCurrentWindow().close();
 		});
 	}
 	// Modify sale
