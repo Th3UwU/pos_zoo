@@ -13,7 +13,7 @@
 				<label for="idProduct">ID: </label>
 				<input id="idProduct" type="text"></input>
 				<button id="buttonSelectProduct" type="button">Seleccionar...</button>
-				<button id="buttonAddProduct" type="button">Agregar</button>
+				<button id="Detail" type="button">Agregar</button>
 
 				<template id="templateProduct">
 					<div class="product">
@@ -60,21 +60,28 @@
 				<input id="idEmployee" type="text"></input>
 				<button id="buttonEmployee" type="button">Seleccionar empleado...</button>
 
+				<label for="date">Fecha</label>
+				<input id="date" type="text"></input>
+
 				<!-- DETAIL -->
 				<template id="templateDetail">
 					<div class="detail">
 
-						<span class="name"></span>
 						<label>ID Producto<input class="idProduct" type="number" min="1"></label>
 						<button class="buttonProduct" type="button">Seleccionar producto...</button>
 
 						<label>Cantidad<input class="amount" type="number" min="1"></label>
 						<label>Coste unitario<input class="cost" type="number" min="0"></label>
 
+						<button class="buttonDelete" type="button">Eliminar</button>
+
 					</div>
 				</template>
 
 				<div id="detailCointainer"></div>
+
+				<button id="buttonAddProductDetail" type="button">Agregar producto</button>
+				<button class="buttonAccept" id="buttonAcceptModify" type="button">Confirmar cambios</button>
 
 			</div>
 

@@ -6,6 +6,11 @@ import { Query } from 'pg';
 let main: Main = getGlobal('main');
 let aux: any = getGlobal('aux');
 
+// ONLY Modify mode
+let templateDetail = (document.getElementById('templateDetail') as HTMLTemplateElement).content.querySelector('div');
+let detailCointainer = (document.getElementById('detailCointainer') as HTMLDivElement);
+let auxIDDetail: number = 0;
+
 // Cancel
 let buttonCancel = document.getElementsByClassName('buttonCancel') as HTMLCollectionOf<HTMLButtonElement>;
 for (const button of buttonCancel) {
@@ -204,6 +209,69 @@ async function MAIN(): Promise<void> {
 	else if (aux.action == 'm')
 	{
 		await refreshSaleModifyInputs();
+
+		// Button add new product
+		let buttonAddProductDetail = document.getElementById('buttonAddProductDetail') as HTMLButtonElement;
+		buttonAddProductDetail.addEventListener('click', (): void => {
+
+			console.log('adding');
+
+			addNewSaleDetail(0, 1, 0, auxIDDetail);
+			auxIDDetail += 1;
+
+		});
+
+		// Button accept modify
+		let buttonAcceptModify = document.getElementById('buttonAcceptModify') as HTMLButtonElement;
+		buttonAcceptModify.addEventListener('click', async (): Promise<void> => {
+
+			try {
+
+				let query: string = ``;
+
+				// Delete ALL old sale details
+				query = `DELETE FROM SALE_DETAIL WHERE FK_SALE = ${aux.id};`;
+				console.log(query);
+				await main.querySQL(query);
+
+				// Modify sale header
+				let idEmployee: number = parseInt((document.getElementById('idEmployee') as HTMLInputElement).value);
+				let newDate: string = (document.getElementById('date') as HTMLInputElement).value;
+
+				query =
+				`UPDATE SALE SET
+				FK_EMPLOYEE = ${idEmployee}, DATE = '${newDate}'
+				WHERE ID_SALE = ${aux.id};
+				`;
+				console.log(query);
+				await main.querySQL(query);
+
+				// Add ALL the new sale details
+				let details = (document.getElementsByClassName('detail') as HTMLCollectionOf<HTMLDivElement>);
+				for (const d of details) {
+
+					query =
+					`
+						INSERT INTO SALE_DETAIL VALUES(
+							(SELECT MAX(ID_SALE_DETAIL) FROM SALE_DETAIL) + 1,
+							${aux.id},
+							${parseInt((d.querySelector('.idProduct') as HTMLInputElement).value)},
+							${parseInt((d.querySelector('.amount') as HTMLInputElement).value)},
+							${parseFloat((d.querySelector('.cost') as HTMLInputElement).value)}
+						);
+
+					`;
+					console.log(query);
+					await main.querySQL(query);
+				}
+
+				
+		
+			} catch (error: any) {
+				console.log(error);
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+			}
+		});
 	}
 }
 MAIN();
@@ -213,8 +281,13 @@ async function refreshSaleModifyInputs(): Promise<void> {
 	// Show modify section
 	document.getElementById('section_modify').style.display = 'block';
 
+	let saleEntry = (await main.querySQL(`SELECT * FROM SALE WHERE id_sale = ${aux.id};`)).rows[0];
+
 	// Set ID Sale
 	(document.getElementById('idSale') as HTMLSpanElement).innerHTML = `ID Venta: ${aux.id}`;
+
+	// Set ID Employee
+	(document.getElementById('idEmployee') as HTMLInputElement).value = `${saleEntry.fk_employee}`;
 
 	// Select employee button
 	(document.getElementById('buttonEmployee') as HTMLButtonElement).addEventListener('click', async (): Promise<void> => {
@@ -223,42 +296,46 @@ async function refreshSaleModifyInputs(): Promise<void> {
 		main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
 	});
 
+	// Set Date
+	(document.getElementById('date') as HTMLInputElement).value = `${saleEntry.date.toISOString().split('T')[0]}`;
+
 	// Clear old details elements
-	let detailCointainer = (document.getElementById('detailCointainer') as HTMLDivElement);
+	
 	while (detailCointainer.firstChild)
 		document.removeChild(detailCointainer.firstChild);
 
 	// Sale details
-	let templateDetail = (document.getElementById('templateDetail') as HTMLTemplateElement).content.querySelector('div');
 	let saleDetailEntry = (await main.querySQL(`SELECT * FROM SALE_DETAIL WHERE fk_sale = ${aux.id};`)).rows;
 
+	auxIDDetail = 0;
 	for (let i = 0; i < saleDetailEntry.length; i++) {
-
-		let detail: HTMLDivElement = document.importNode(templateDetail, true);
-		detail.id = `detail_${i}`;
-
-		let product = (await main.querySQL(`SELECT * FROM PRODUCT WHERE id_product = ${saleDetailEntry[i].fk_product};`)).rows[0];
-
-		(detail.querySelector('.name') as HTMLSpanElement).innerHTML = `Producto: ${product.name}`;
-		(detail.querySelector('.idProduct') as HTMLInputElement).value = `${saleDetailEntry[i].fk_product}`;
-		(detail.querySelector('.amount') as HTMLInputElement).value = `${saleDetailEntry[i].amount}`;
-		(detail.querySelector('.cost') as HTMLInputElement).value = `${saleDetailEntry[i].cost}`;
-		(detail.querySelector('.buttonProduct') as HTMLButtonElement).addEventListener('click', (): void => {
-
-			// let onCloseCode =
-			// `
-			// 	let parent = this.window.getParentWindow();
-			// 	parent.webContents.executeJavaScript('console.log("AAAAA");');
-			// 	console.log('HELP ME!');
-			// `;
-
-			main.setGlobal({...aux, selectEntryColumn: 'product', returnInput: `document.getElementById('detail_${i}').querySelector('.idProduct')`}, 'aux');
-			let selectEntryWindow = main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
-			// selectEntryWindow.setOnClose(onCloseCode);
-
-
-		});
-
-		detailCointainer.appendChild(detail);
+		
+		addNewSaleDetail(saleDetailEntry[i].fk_product, saleDetailEntry[i].amount, saleDetailEntry[i].cost, auxIDDetail);
+		auxIDDetail += 1;
 	}
+}
+
+function addNewSaleDetail(id: number, amount: number, cost: number, elementId: number): void {
+
+
+	let detail: HTMLDivElement = document.importNode(templateDetail, true);
+	detail.id = `detail_${elementId}`;
+
+	(detail.querySelector('.idProduct') as HTMLInputElement).value = `${id}`;
+	(detail.querySelector('.amount') as HTMLInputElement).value = `${amount}`;
+	(detail.querySelector('.cost') as HTMLInputElement).value = `${cost}`;
+	(detail.querySelector('.buttonProduct') as HTMLButtonElement).addEventListener('click', (): void => {
+
+		main.setGlobal({...aux, selectEntryColumn: 'product', returnInput: `document.getElementById('detail_${elementId}').querySelector('.idProduct')`}, 'aux');
+		main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
+
+	});
+
+	(detail.querySelector('.buttonDelete') as HTMLButtonElement).addEventListener('click', (event: any): void => {
+
+		// Delete from DOM
+		event.target.parentElement.remove()
+	});
+
+	detailCointainer.appendChild(detail);
 }
