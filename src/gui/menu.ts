@@ -25,7 +25,8 @@ async function MAIN(): Promise<void> {
 	for (const button of selectEntryButtons) {
 		button.addEventListener('click', (): void => {
 
-			main.setGlobal({...aux, selectEntryColumn: button.dataset.inputDst, returnInput: `document.getElementById(${button.dataset.inputDst})`}, 'aux');
+			main.setGlobal({...aux, selectEntryColumn: button.dataset.inputDst, returnInput: `document.getElementById('${button.dataset.inputDst}')`}, 'aux');
+			console.log(getGlobal('aux'));
 			main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
 		});
 	}
