@@ -23,11 +23,16 @@ let buttonLogin = document.getElementById('buttonLogin') as HTMLButtonElement;
 buttonLogin.addEventListener('click', async (): Promise<void> => {
 
 	try {
-		let user: any = (await main.querySQL(`SELECT * FROM EMPLOYEE WHERE id_employee = ${idUser.value};`)).rows[0];
 
 		// Check empty inputs
 		if ((idUser.value == "") || (pass.value == "") || (store.value == ""))
 			throw {message: "No puede haber campos vacíos"};
+
+		let user: any = (await main.querySQL(`SELECT * FROM EMPLOYEE WHERE id_employee = ${idUser.value} AND NOT id_employee = 0;`)).rows[0];
+
+		// Check user
+		if (!user)
+			throw {message: "Usuario no existente"};
 
 		// Check password
 		if (user.pass != pass.value)

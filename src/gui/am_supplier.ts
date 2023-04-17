@@ -49,6 +49,8 @@ async function MAIN(): Promise<void> {
 				let query: string = `INSERT INTO SUPPLIER VALUES((SELECT MAX(ID_SUPPLIER) FROM SUPPLIER) + 1, '${name.value}', '${address.value}', ${tel.value}, (DECODE('${imageRaw}', 'base64')), DEFAULT);`;
 				console.log(query);
 				await main.querySQL(query);
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Registro exitoso", type: "info"});
+				getCurrentWindow().close();
 		
 			} catch (error: any) {
 				console.log(error);
@@ -93,6 +95,8 @@ async function MAIN(): Promise<void> {
 
 				console.log(query);
 				await main.querySQL(query);
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Modificación exitosa", type: "info"});
+				getCurrentWindow().close();
 		
 			} catch (error: any) {
 				console.log(error);

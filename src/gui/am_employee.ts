@@ -60,12 +60,20 @@ async function MAIN(): Promise<void> {
 		buttonAccept.addEventListener('click', async (): Promise<void> => {
 
 			try {
-				let CVRaw: string = readFileSync(CVPath.value, null).toString('base64');
+
+				let CVRaw: string = null;
+				if (CVPath.value)
+					CVRaw = readFileSync(CVPath.value, null).toString('base64');
+
 				let query: string = `INSERT INTO EMPLOYEE VALUES((SELECT MAX(ID_EMPLOYEE) FROM EMPLOYEE) + 1,
 				'${pass.value}', '${curp.value}', '${firstName.value}', '${lastName.value}',
-				'${address.value}', '${nss.value}', '${role.value}', (DECODE('${CVRaw}', 'base64')), DEFAULT);`;
+				'${address.value}', '${nss.value}', '${role.value}', `
+				+ ((CVRaw) ? (`(DECODE('${CVRaw}', 'base64')), DEFAULT);`) : (`DEFAULT, DEFAULT);`));
+				
 				console.log(query);
 				await main.querySQL(query);
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Registro exitoso", type: "info"});
+				getCurrentWindow().close();
 		
 			} catch (error: any) {
 				console.log(error);
@@ -143,6 +151,8 @@ async function MAIN(): Promise<void> {
 
 				console.log(query);
 				await main.querySQL(query);
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Modificación exitosa", type: "info"});
+				getCurrentWindow().close();
 		
 			} catch (error: any) {
 				console.log(error);

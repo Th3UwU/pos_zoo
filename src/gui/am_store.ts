@@ -46,6 +46,9 @@ async function MAIN(): Promise<void> {
 				let query = `INSERT INTO STORE VALUES((SELECT MAX(ID_STORE) FROM STORE) + 1, '${location.value}', '${type.value}', '${hours.value}', DEFAULT);`;
 				console.log(query);
 				await main.querySQL(query);
+
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Registro exitoso", type: "info"});
+				getCurrentWindow().close();
 		
 			} catch (error: any) {
 				console.log(error);
@@ -81,6 +84,8 @@ async function MAIN(): Promise<void> {
 
 				console.log(query);
 				await main.querySQL(query);
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Modificación exitosa", type: "info"});
+				getCurrentWindow().close();
 		
 			} catch (error: any) {
 				console.log(error);

@@ -87,6 +87,8 @@ async function MAIN(): Promise<void> {
 				let query: string = `INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, '${supplier.value}', '${name.value}', '${description.value}', '${price.value}', '${category.value}', '${stock.value}', '${maxStock.value}', '${localLimit.value}', DEFAULT, (DECODE('${imageRaw}', 'base64')));`;
 				console.log(query);
 				await main.querySQL(query);
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Registro exitoso", type: "info"});
+				getCurrentWindow().close();
 		
 			} catch (error: any) {
 				console.log(error);
@@ -141,6 +143,8 @@ async function MAIN(): Promise<void> {
 
 				console.log(query);
 				await main.querySQL(query);
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Modificación exitosa", type: "info"});
+				getCurrentWindow().close();
 		
 			} catch (error: any) {
 				console.log(error);

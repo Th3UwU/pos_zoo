@@ -197,6 +197,9 @@ async function MAIN(): Promise<void> {
 			let totalInfo = document.createElement('span') as HTMLSpanElement;
 			totalInfo.innerHTML = `TOTAL: ${total}`;
 			section_ticket.appendChild(totalInfo);
+
+			dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Venta exitosa", type: "info"});
+			getCurrentWindow().close();
 		});
 
 		// Accept button3 (section_ticket -> CLOSE_WINDOW)
@@ -263,6 +266,8 @@ async function MAIN(): Promise<void> {
 					`;
 					console.log(query);
 					await main.querySQL(query);
+					dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Modificación exitosa", type: "info"});
+					getCurrentWindow().close();
 				}
 
 				
