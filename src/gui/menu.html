@@ -8,92 +8,98 @@
 	<body>
 		<div id="container">
 
-			<div class="menuOption" id="addProduct">
-				<button class="amButton" data-action="a" data-column="product" type="button">Agregar producto</button>
+			<div id="section_sales">
+				<div class="menuOption" id="addSale">
+					<button class="amButton" data-action="a" data-column="sale" type="button">Agregar venta</button>
+				</div>
+
+				<div class="menuOption" id="addOrder">
+					<button class="amButton" data-action="a" data-column="order" type="button">Agregar pedido</button>
+				</div>
 			</div>
 
-			<div class="menuOption" id="modifyProduct">
-				<button class="amButton" data-action="m" data-column="product" type="button">Modificar producto</button>
-				<label for="product">ID Producto</label>
-				<input type="text" id="product">
-				<button data-input-dst="product" class="selectEntry" type="button">Seleccionar producto...</button>
-			</div>
+			<div id="section_manager">
 
-			<div class="menuOption" id="addStore">
-				<button class="amButton" data-action="a" data-column="store" type="button">Agregar local</button>
-			</div>
+				<div class="menuOption" id="addProduct">
+					<button class="amButton" data-action="a" data-column="product" type="button">Agregar producto</button>
+				</div>
+	
+				<div class="menuOption" id="modifyProduct">
+					<button class="amButton" data-action="m" data-column="product" type="button">Modificar producto</button>
+					<label for="product">ID Producto</label>
+					<input type="text" id="product">
+					<button data-input-dst="product" class="selectEntry" type="button">Seleccionar producto...</button>
+				</div>
+	
+				<div class="menuOption" id="addStore">
+					<button class="amButton" data-action="a" data-column="store" type="button">Agregar local</button>
+				</div>
+	
+				<div class="menuOption" id="modifyStore">
+					<button class="amButton" data-action="m" data-column="store" type="button">Modificar local</button>
+					<label for="store">ID local</label>
+					<input type="text" id="store">
+					<button data-input-dst="store" class="selectEntry" type="button">Seleccionar local...</button>
+				</div>
+	
+				<div class="menuOption" id="addSupplier">
+					<button class="amButton" data-action="a" data-column="supplier" type="button">Agregar proveedor</button>
+				</div>
+	
+				<div class="menuOption" id="modifySupplier">
+					<button class="amButton" data-action="m" data-column="supplier" type="button">Modificar proveedor</button>
+					<label for="supplier">ID proveedor</label>
+					<input type="text" id="supplier">
+					<button data-input-dst="supplier" class="selectEntry" type="button">Seleccionar proveedor...</button>
+				</div>
+	
+				<div class="menuOption" id="modifySale">
+					<button class="amButton" data-action="m" data-column="sale" type="button">Modificar venta</button>
+					<label for="sale">ID venta</label>
+					<input type="text" id="sale">
+					<button data-input-dst="sale" class="selectEntry" type="button">Seleccionar venta...</button>
+				</div>
+	
+				<div class="menuOption" id="addPurchase">
+					<button class="amButton" data-action="a" data-column="purchase" type="button">Agregar compra</button>
+				</div>
+	
+				<div class="menuOption" id="modifyPurchase">
+					<button class="amButton" data-action="m" data-column="purchase" type="button">Modificar compra</button>
+					<label for="purchase">ID compra</label>
+					<input type="text" id="purchase">
+					<button data-input-dst="purchase" class="selectEntry" type="button">Seleccionar compra...</button>
+				</div>
+	
+				<div class="menuOption" id="addReturn">
+					<button class="amButton" data-action="a" data-column="return" type="button">Agregar devolución</button>
+				</div>
+	
+				<div class="menuOption" id="modifyReturn">
+					<button class="amButton" data-action="m" data-column="return" type="button">Modificar devolución</button>
+					<label for="return">ID devolución</label>
+					<input type="text" id="return">
+					<button data-input-dst="return" class="selectEntry" type="button">Seleccionar devolución...</button>
+				</div>
+	
+				<div class="menuOption" id="modifyOrder">
+					<button class="amButton" data-action="m" data-column="order" type="button">Modificar pedido</button>
+					<label for="order">ID pedido</label>
+					<input type="text" id="order">
+					<button data-input-dst="order" class="selectEntry" type="button">Seleccionar pedido...</button>
+				</div>
+	
+				<div class="menuOption" id="addEmployee">
+					<button class="amButton" data-action="a" data-column="employee" type="button">Agregar empleado</button>
+				</div>
+	
+				<div class="menuOption" id="modifyEmployee">
+					<button class="amButton" data-action="m" data-column="employee" type="button">Modificar empleado</button>
+					<label for="employee">ID empleado</label>
+					<input type="text" id="employee">
+					<button data-input-dst="employee" class="selectEntry" type="button">Seleccionar empleado...</button>
+				</div>
 
-			<div class="menuOption" id="modifyStore">
-				<button class="amButton" data-action="m" data-column="store" type="button">Modificar local</button>
-				<label for="store">ID local</label>
-				<input type="text" id="store">
-				<button data-input-dst="store" class="selectEntry" type="button">Seleccionar local...</button>
-			</div>
-
-			<div class="menuOption" id="addSupplier">
-				<button class="amButton" data-action="a" data-column="supplier" type="button">Agregar proveedor</button>
-			</div>
-
-			<div class="menuOption" id="modifySupplier">
-				<button class="amButton" data-action="m" data-column="supplier" type="button">Modificar proveedor</button>
-				<label for="supplier">ID proveedor</label>
-				<input type="text" id="supplier">
-				<button data-input-dst="supplier" class="selectEntry" type="button">Seleccionar proveedor...</button>
-			</div>
-
-			<div class="menuOption" id="addSale">
-				<button class="amButton" data-action="a" data-column="sale" type="button">Agregar venta</button>
-			</div>
-
-			<div class="menuOption" id="modifySale">
-				<button class="amButton" data-action="m" data-column="sale" type="button">Modificar venta</button>
-				<label for="sale">ID venta</label>
-				<input type="text" id="sale">
-				<button data-input-dst="sale" class="selectEntry" type="button">Seleccionar venta...</button>
-			</div>
-
-			<div class="menuOption" id="addPurchase">
-				<button class="amButton" data-action="a" data-column="purchase" type="button">Agregar compra</button>
-			</div>
-
-			<div class="menuOption" id="modifyPurchase">
-				<button class="amButton" data-action="m" data-column="purchase" type="button">Modificar compra</button>
-				<label for="purchase">ID compra</label>
-				<input type="text" id="purchase">
-				<button data-input-dst="purchase" class="selectEntry" type="button">Seleccionar compra...</button>
-			</div>
-
-			<div class="menuOption" id="addReturn">
-				<button class="amButton" data-action="a" data-column="return" type="button">Agregar devolución</button>
-			</div>
-
-			<div class="menuOption" id="modifyReturn">
-				<button class="amButton" data-action="m" data-column="return" type="button">Modificar devolución</button>
-				<label for="return">ID devolución</label>
-				<input type="text" id="return">
-				<button data-input-dst="return" class="selectEntry" type="button">Seleccionar devolución...</button>
-			</div>
-
-			<div class="menuOption" id="addOrder">
-				<button class="amButton" data-action="a" data-column="order" type="button">Agregar pedido</button>
-			</div>
-
-			<div class="menuOption" id="modifyOrder">
-				<button class="amButton" data-action="m" data-column="order" type="button">Modificar pedido</button>
-				<label for="order">ID pedido</label>
-				<input type="text" id="order">
-				<button data-input-dst="order" class="selectEntry" type="button">Seleccionar pedido...</button>
-			</div>
-
-			<div class="menuOption" id="addEmployee">
-				<button class="amButton" data-action="a" data-column="employee" type="button">Agregar empleado</button>
-			</div>
-
-			<div class="menuOption" id="modifyEmployee">
-				<button class="amButton" data-action="m" data-column="employee" type="button">Modificar empleado</button>
-				<label for="employee">ID empleado</label>
-				<input type="text" id="employee">
-				<button data-input-dst="employee" class="selectEntry" type="button">Seleccionar empleado...</button>
 			</div>
 
 		</div>

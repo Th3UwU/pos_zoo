@@ -124,10 +124,10 @@ CREATE TABLE EMPLOYEE
 -- EMPLOYEE EXAMPLES
 INSERT INTO EMPLOYEE VALUES(0, 'DEFAULT', 'DEFAULT', 'DEFAULT', 'DEFAULT', 'DEFAULT', 'DEFAULT', 'DEFAULT', DEFAULT, DEFAULT);
 INSERT INTO EMPLOYEE VALUES(1, '123', 'SUTA743264', 'Maria', 'García Rodríguez', 'Calle Juan Palomar y Arias # 567, Colonia Jardines Vallarta.', '138092187198', 'ventas', DEFAULT, DEFAULT);
-INSERT INTO EMPLOYEE VALUES(1, '456', 'HAJK39U217', 'Ana', 'López Pérez', 'Avenida Patria # 2345, Colonia Jardines Universidad.', '4983798427', 'gerente de almacen', DEFAULT, DEFAULT);
-INSERT INTO EMPLOYEE VALUES(1, '789', 'JFYS478932', 'Juan', 'González Hernández', 'Calle Nueva España # 789, Colonia Providencia.', '310278398127', 'gerente de ventas', DEFAULT, DEFAULT);
-INSERT INTO EMPLOYEE VALUES(1, '123', 'NCJF758934', 'Sofia', 'Martínez Sánchez', 'Avenida Vallarta # 4321, Colonia Arcos Vallarta.', '40237498237', 'almacen', DEFAULT, DEFAULT);
-INSERT INTO EMPLOYEE VALUES(1, '456', 'JGUE9838432', 'Carlos', 'Fernández Torres', 'Calle López Cotilla # 987, Colonia Americana.', '013821047982', 'ventas', DEFAULT, DEFAULT);
+INSERT INTO EMPLOYEE VALUES(2, '456', 'HAJK39U217', 'Ana', 'López Pérez', 'Avenida Patria # 2345, Colonia Jardines Universidad.', '4983798427', 'gerente de almacen', DEFAULT, DEFAULT);
+INSERT INTO EMPLOYEE VALUES(3, '789', 'JFYS478932', 'Juan', 'González Hernández', 'Calle Nueva España # 789, Colonia Providencia.', '310278398127', 'gerente de ventas', DEFAULT, DEFAULT);
+INSERT INTO EMPLOYEE VALUES(4, '123', 'NCJF758934', 'Sofia', 'Martínez Sánchez', 'Avenida Vallarta # 4321, Colonia Arcos Vallarta.', '40237498237', 'almacen', DEFAULT, DEFAULT);
+INSERT INTO EMPLOYEE VALUES(5, '456', 'JGUE9838432', 'Carlos', 'Fernández Torres', 'Calle López Cotilla # 987, Colonia Americana.', '013821047982', 'ventas', DEFAULT, DEFAULT);
 
 -- SALE
 CREATE TABLE SALE

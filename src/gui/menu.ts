@@ -10,6 +10,10 @@ let selectEntryButtons = document.getElementsByClassName('selectEntry') as HTMLC
 
 async function MAIN(): Promise<void> {
 
+	// Hide stuff
+	if (!main.credentials.role.includes('gerente'))
+		(document.getElementById('section_manager') as HTMLDivElement).style.display = 'none';
+
 	// AM Buttons
 	for (const button of amButtons) {
 		button.addEventListener('click', (): void => {
