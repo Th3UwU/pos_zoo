@@ -199,7 +199,6 @@ async function MAIN(): Promise<void> {
 			section_ticket.appendChild(totalInfo);
 
 			dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Venta exitosa", type: "info"});
-			getCurrentWindow().close();
 		});
 
 		// Accept button3 (section_ticket -> CLOSE_WINDOW)
