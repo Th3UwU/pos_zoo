@@ -23,10 +23,9 @@ CREATE TABLE SUPPLIER
 
 -- SUPPLIER EXAMPLES
 INSERT INTO SUPPLIER VALUES(0, 'DEFAULT', DEFAULT, DEFAULT, DEFAULT);
-INSERT INTO SUPPLIER VALUES((SELECT MAX(ID_SUPPLIER) FROM SUPPLIER) + 1, 'Lala', 'Anillo Perif. Sur Manuel Gómez Morín 6201, Lopez Cotilla, 45610 San Pedro Tlaquepaque, Jal.', 3336684956, DEFAULT);
-INSERT INTO SUPPLIER VALUES((SELECT MAX(ID_SUPPLIER) FROM SUPPLIER) + 1, 'SuKarne', 'Av. Belisario Domínguez #1195 esquina, Monte Ajusco, Lomas Independencia, 44340 Guadalajara, Jal.', 3338529213, DEFAULT);
 INSERT INTO SUPPLIER VALUES((SELECT MAX(ID_SUPPLIER) FROM SUPPLIER) + 1, 'Distrito Max', 'Calle Norte sur 4 Juguetimax, Alce Blanco, 53370 Naucalpan de Juárez, Méx.', 5585268273, DEFAULT);
-INSERT INTO SUPPLIER VALUES((SELECT MAX(ID_SUPPLIER) FROM SUPPLIER) + 1, 'Materias primas Guadalajara', 'Av. Chicalote 2579 D, Comercial Abastos, 44530 Guadalajara, Jal.', 3336713232, DEFAULT);
+INSERT INTO SUPPLIER VALUES((SELECT MAX(ID_SUPPLIER) FROM SUPPLIER) + 1, 'Nu Promo', 'Av Guadalupe 4279, Cd de los Niños, 45040 Zapopan, Jal.', 423423423, DEFAULT);
+INSERT INTO SUPPLIER VALUES((SELECT MAX(ID_SUPPLIER) FROM SUPPLIER) + 1, 'Jugueteria la loba', 'C. Liceo 240, Zona Centro, 44100 Guadalajara, Jal.', 442342, DEFAULT);
 
 -- PRODUCT TABLE
 CREATE TABLE PRODUCT
@@ -51,8 +50,23 @@ CREATE TABLE PRODUCT
 
 -- PRODUCT EXAMPLES
 INSERT INTO PRODUCT VALUES(0, 0, 'DEFAULT', 'DEFAULT', 0.0, 'DEFAULT', 0, 0, 0, DEFAULT, DEFAULT);
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 0, 'Animales y su alimentación', 'Libro de animales etc etc', 120.5, 'libro', 45, 100, 10, DEFAULT, DEFAULT);
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 0, 'Peluche de león', 'Es un peluche', 150.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
+
+-- a
+INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 3, 'Peluche de león', 'Es un peluche de león', 150.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 3, 'Peluche de flamingo', 'Es un peluche de flamingo', 90.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 3, 'Peluche de tigre', 'Es un peluche de tigre', 130.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 3, 'Peluche de leon marino', 'Es un peluche de un leon marino', 70.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 3, 'Peluche de mono', 'Es un peluche de un mono', 90.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
+
+INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 2, 'Rompecabezas animales', 'Juguete educativo rompecabezas animales', 200.0, 'juguete', 25, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 2, 'Libro actividades', 'Libro de actividades de animales', 180.0, 'juguete', 25, 100, 10, DEFAULT, DEFAULT);
+
+INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 2, 'Animales y su alimentación', 'Enciclopedia de animales y sus alimentos', 250.0, 'libro', 45, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 1, 'La vida secreta de los animales', 'Descrube las maravillas del mundo animal', 170.0, 'libro', 45, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 1, 'Animales asombrosos', 'juego de construcción en el que los niños pueden crear sus propios animales a partir de piezas desmontables', 120.5, 'libro', 45, 100, 10, DEFAULT, DEFAULT);
+
+INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 1, 'Camisa tigre', 'Camisa estandar con estampado de tigre', 250.0, 'ropa', 45, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 1, 'Camisa de animales', 'Camisa estandar con estampado de animales', 200.0, 'ropa', 45, 100, 10, DEFAULT, DEFAULT);
 
 -- STORE
 CREATE TABLE STORE
@@ -70,7 +84,10 @@ CREATE TABLE STORE
 -- STORE EXAMPLES
 INSERT INTO STORE VALUES(0, 'DEFAULT', 'DEFAULT', 'DEFAULT', DEFAULT);
 INSERT INTO STORE VALUES((SELECT MAX(ID_STORE) FROM STORE) + 1, 'Acuario', 'dulceria', '9:00 - 18:00', DEFAULT);
-INSERT INTO STORE VALUES((SELECT MAX(ID_STORE) FROM STORE) + 1, 'Zona reptiles', 'restaurante', '9:00 - 18:00', DEFAULT);
+INSERT INTO STORE VALUES((SELECT MAX(ID_STORE) FROM STORE) + 1, 'Zona reptiles', 'restaurante', '9:00 - 15:00', DEFAULT);
+INSERT INTO STORE VALUES((SELECT MAX(ID_STORE) FROM STORE) + 1, 'Zona pandas', 'dulceria', '9:00 - 19:00', DEFAULT);
+INSERT INTO STORE VALUES((SELECT MAX(ID_STORE) FROM STORE) + 1, 'Zona zafari', 'bebidas', '9:00 - 18:00', DEFAULT);
+INSERT INTO STORE VALUES((SELECT MAX(ID_STORE) FROM STORE) + 1, 'Zona reptiles', 'bebidas', '9:00 - 16:00', DEFAULT);
 
 -- STORE_PRODUCT
 CREATE TABLE STORE_PRODUCT
@@ -106,7 +123,11 @@ CREATE TABLE EMPLOYEE
 
 -- EMPLOYEE EXAMPLES
 INSERT INTO EMPLOYEE VALUES(0, 'DEFAULT', 'DEFAULT', 'DEFAULT', 'DEFAULT', 'DEFAULT', 'DEFAULT', 'DEFAULT', DEFAULT, DEFAULT);
-INSERT INTO EMPLOYEE VALUES(1, '123', 'SUTA743264', 'Ángel Emmanuel', 'Suárez Torres', 'Av. Lopez Mateos #1412', '138092187198', 'ventas', DEFAULT, DEFAULT);
+INSERT INTO EMPLOYEE VALUES(1, '123', 'SUTA743264', 'Maria', 'García Rodríguez', 'Calle Juan Palomar y Arias # 567, Colonia Jardines Vallarta.', '138092187198', 'ventas', DEFAULT, DEFAULT);
+INSERT INTO EMPLOYEE VALUES(1, '456', 'HAJK39U217', 'Ana', 'López Pérez', 'Avenida Patria # 2345, Colonia Jardines Universidad.', '4983798427', 'gerente de almacen', DEFAULT, DEFAULT);
+INSERT INTO EMPLOYEE VALUES(1, '789', 'JFYS478932', 'Juan', 'González Hernández', 'Calle Nueva España # 789, Colonia Providencia.', '310278398127', 'gerente de ventas', DEFAULT, DEFAULT);
+INSERT INTO EMPLOYEE VALUES(1, '123', 'NCJF758934', 'Sofia', 'Martínez Sánchez', 'Avenida Vallarta # 4321, Colonia Arcos Vallarta.', '40237498237', 'almacen', DEFAULT, DEFAULT);
+INSERT INTO EMPLOYEE VALUES(1, '456', 'JGUE9838432', 'Carlos', 'Fernández Torres', 'Calle López Cotilla # 987, Colonia Americana.', '013821047982', 'ventas', DEFAULT, DEFAULT);
 
 -- SALE
 CREATE TABLE SALE

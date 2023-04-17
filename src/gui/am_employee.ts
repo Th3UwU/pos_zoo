@@ -34,7 +34,9 @@ let status = document.getElementById('status') as HTMLInputElement;
 // Employee roles
 const roles: string[] = [
 	'ventas',
-	'gerente de ventas'
+	'gerente de ventas',
+	'almacen',
+	'gerente de almacen',
 ];
 
 for (const r of roles) {
