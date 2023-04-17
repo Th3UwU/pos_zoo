@@ -11,6 +11,12 @@ body {
 	background-color: black;
 }
 
+img {
+	display: block;
+	margin: auto;
+	width: 250px;
+}
+
 #container {
 	border: 0;
 	box-sizing: border-box;
