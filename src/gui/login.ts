@@ -4,12 +4,17 @@ import Main from '../main';
 let main: Main = getGlobal('main');
 let aux: any = getGlobal('aux');
 
+let localAux = document.getElementById('localAux') as HTMLSpanElement;
+
 let idUser = document.getElementById('idUser') as HTMLInputElement;
 let pass = document.getElementById('pass') as HTMLInputElement;
 let store = document.getElementById('store') as HTMLInputElement;
+let storeName = document.getElementById('storeName') as HTMLSpanElement;
+
+let buttonStore = document.getElementById('buttonStore') as HTMLButtonElement;
+let buttonLogin = document.getElementById('buttonLogin') as HTMLButtonElement;
 
 // Button supplier
-let buttonStore = document.getElementById('buttonStore') as HTMLButtonElement;
 buttonStore.addEventListener('click', () => {
 
 	let newAux = {...aux, selectEntryColumn: 'store', returnInput: `document.getElementById('store')`};
@@ -30,11 +35,13 @@ buttonStore.addEventListener('click', () => {
 		const main = (0, remote_1.getGlobal)('main');
 		document.getElementById('store').value = main.aux.return.id_store;
 		document.getElementById('storeName').innerHTML = main.aux.return.location;
+		document.getElementById('localAux').dataset.validStore = '1';
 	}
 	catch (error)
 	{
 		document.getElementById('store').value = main.aux.return.id_store;
 		document.getElementById('storeName').innerHTML = main.aux.return.location;
+		document.getElementById('localAux').dataset.validStore = '1';
 	}
 	`;
 
@@ -42,7 +49,21 @@ buttonStore.addEventListener('click', () => {
 	
 });
 
-let buttonLogin = document.getElementById('buttonLogin') as HTMLButtonElement;
+store.addEventListener('change', async (): Promise<void> => {
+
+	try {
+		let storeLocation: string = (await main.querySQL(`SELECT LOCATION FROM STORE WHERE ID_STORE = ${store.value} AND NOT ID_STORE = 0;`)).rows[0].location;
+		storeName.innerHTML = storeLocation;
+		localAux.dataset.validStore = '1';
+	}
+	catch (error: any){
+		storeName.innerHTML = 'Local no encontrado';
+		localAux.dataset.validStore = '0';
+	}
+
+});
+
+
 buttonLogin.addEventListener('click', async (): Promise<void> => {
 
 	try {
@@ -50,6 +71,10 @@ buttonLogin.addEventListener('click', async (): Promise<void> => {
 		// Check empty inputs
 		if ((idUser.value == "") || (pass.value == "") || (store.value == ""))
 			throw {message: "No puede haber campos vacíos"};
+
+		// Check valid store
+		if (localAux.dataset.validStore == '0')
+			throw {message: "Selecciona un local valido"};
 
 		let user: any = (await main.querySQL(`SELECT * FROM EMPLOYEE WHERE id_employee = ${idUser.value} AND NOT id_employee = 0;`)).rows[0];
 
