@@ -22,6 +22,7 @@ buttonCV.addEventListener('click', () => {
 });
 
 // Add new employee
+let id_employee = document.getElementById('id_employee') as HTMLInputElement;
 let pass = document.getElementById('pass') as HTMLInputElement;
 let curp = document.getElementById('curp') as HTMLInputElement;
 let firstName = document.getElementById('first_name') as HTMLInputElement;
@@ -55,10 +56,19 @@ buttonCancel.addEventListener('click', (): void => {
 });
 
 async function MAIN(): Promise<void> {
+
+	id_employee.readOnly = true;
 	
 	// Add new employee
 	if (aux.action == 'a')
 	{
+		// Get 'new id'
+		let new_id: number = (await main.querySQL(`SELECT MAX(ID_EMPLOYEE) FROM EMPLOYEE`)).rows[0].max;
+		new_id++;
+
+		// Set 'new id' in the input field
+		id_employee.value = `${new_id}`;
+
 		buttonAccept.addEventListener('click', async (): Promise<void> => {
 
 			try {
@@ -67,7 +77,7 @@ async function MAIN(): Promise<void> {
 				if (CVPath.value)
 					CVRaw = readFileSync(CVPath.value, null).toString('base64');
 
-				let query: string = `INSERT INTO EMPLOYEE VALUES((SELECT MAX(ID_EMPLOYEE) FROM EMPLOYEE) + 1,
+				let query: string = `INSERT INTO EMPLOYEE VALUES(new_id,
 				'${pass.value}', '${curp.value}', '${firstName.value}', '${lastName.value}',
 				'${address.value}', '${nss.value}', '${role.value}', `
 				+ ((CVRaw) ? (`(DECODE('${CVRaw}', 'base64')), DEFAULT);`) : (`DEFAULT, DEFAULT);`));
@@ -104,6 +114,7 @@ async function MAIN(): Promise<void> {
 		let employee: any = (await main.querySQL(`SELECT * FROM EMPLOYEE WHERE id_employee = ${aux.id};`)).rows[0];
 
 		// Populate inputs with existing info
+		id_employee.value = employee.id_employee;
 		pass.value = employee.pass;
 		curp.value = employee.curp;
 		firstName.value = employee.first_name;

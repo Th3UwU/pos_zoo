@@ -249,7 +249,7 @@ async function MAIN(): Promise<void> {
 				await main.querySQL(query);
 
 				// Add ALL the new sale details
-				let details = (document.getElementsByClassName('detail') as HTMLCollectionOf<HTMLDivElement>);
+				let details = document.getElementsByClassName('detail') as HTMLCollectionOf<HTMLDivElement>;
 				for (const d of details) {
 
 					query =
@@ -265,9 +265,10 @@ async function MAIN(): Promise<void> {
 					`;
 					console.log(query);
 					await main.querySQL(query);
-					dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Modificación exitosa", type: "info"});
-					getCurrentWindow().close();
 				}
+
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Modificación exitosa", type: "info"});
+				getCurrentWindow().close();
 
 				
 		
