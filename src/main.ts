@@ -13,6 +13,7 @@ class Main {
 
 	window: BrowserWindow;
 	client: Client;
+	aux: any = null;
 
 	credentials = <Credentials>({
 		idEmployee: 0,
@@ -26,9 +27,6 @@ class Main {
 		process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 		initialize();
-
-		// global.aux = {action: 'a', id: -1, selectEntryColumn: '', returnInputID: ''};
-		global.aux = {action: 'm', id: 1};
 	}
 
 	async connectDB() {
@@ -83,9 +81,7 @@ class Main {
 	onReady() {
 
 		this.connectDB();
-
 		this.createWindow(800, 600, 'gui/login.html', this.window);
-		// loginWindow.window.fullScreen = true;
 	}
 }
 

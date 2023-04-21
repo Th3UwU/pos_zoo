@@ -3,7 +3,10 @@ import { enable } from '@electron/remote/main'
 
 export default class Window {
 	window: BrowserWindow;
-	onCloseCode: string = null;
+
+	codeCloseMain: string = null;
+	codeClose: string = null;
+	codeCloseParent: string = null;
 
 	constructor(width: number, height: number, source: string, parent: BrowserWindow = null) {
 
@@ -11,7 +14,7 @@ export default class Window {
 			width: width,
 			height: height,
 			parent: parent,
-			modal: true,
+			modal: (parent) ? (true) : (false),
 			show: false,
 			webPreferences:
 			{
@@ -35,17 +38,24 @@ export default class Window {
 		enable(this.window.webContents);
 	}
 
+
 	onClose() {
-		console.log(`Closing window: ${this.window.title}`);
-		if (this.onCloseCode)
-		{
-			console.log('Executing custom code');
-			eval(this.onCloseCode);
-		}
+
+		// Main
+		if (this.codeCloseMain)
+			eval(this.codeCloseMain);
+
+		// This window
+		if (this.codeClose)
+			this.window.webContents.executeJavaScript(this.codeClose);
+
+		// Parent
+		if (this.codeCloseParent)
+			this.window.getParentWindow().webContents.executeJavaScript(this.codeCloseParent);
 	}
 
-	setOnClose(code: string) {
-		this.onCloseCode = code;
+	setVar(value: any, name: string) {
+		this[name] = value;
 	}
 
 	onClosed() {

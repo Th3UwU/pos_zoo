@@ -15,7 +15,30 @@ buttonStore.addEventListener('click', () => {
 	let newAux = {...aux, selectEntryColumn: 'store', returnInput: `document.getElementById('store')`};
 	main.setGlobal(newAux, 'aux');
 
-	main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
+	// Set aux target
+	main.setProperty({...main.aux, column: 'store', canSelect: true}, 'aux');
+
+	// Create query window
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+
+	// Code to set 'id' and 'employee name' at close window
+	let code: string =
+	`
+	try
+	{
+		const remote_1 = require("@electron/remote");
+		const main = (0, remote_1.getGlobal)('main');
+		document.getElementById('store').value = main.aux.return.id_store;
+		document.getElementById('storeName').innerHTML = main.aux.return.location;
+	}
+	catch (error)
+	{
+		document.getElementById('store').value = main.aux.return.id_store;
+		document.getElementById('storeName').innerHTML = main.aux.return.location;
+	}
+	`;
+
+	queryWindow.setVar(code, 'codeCloseParent');
 	
 });
 

@@ -35,11 +35,11 @@ img {
 	color: lightsalmon;
 }
 
-label, input, button {
+label, input, button, span {
 	display: block;
 }
 
-label {
+label, span {
 	text-align: center;
 	font-weight: bold;
 	color: lightgray;

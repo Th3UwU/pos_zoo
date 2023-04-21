@@ -2,20 +2,24 @@
 <html lang="es">
 	<head>
 		<meta charset="UTF-8">
-		<title>Seleccionar...</title>
-		<link rel="stylesheet" href="./select_entry.css" type="text/css">
+		<title>Query</title>
+		<link rel="stylesheet" href="./query.css" type="text/css">
 	</head>
 	<body>
 		<div id="container">
+			<span id="query_title"></span>
 
+			<label id="search_bar_label" for="search_bar"></label>
 			<input id="search_bar" type="text"></input>
 			<button id="button_search" type="button">Buscar</button>
 
-			<div id="query_container"></div>
+			<div id="query_container">
+				
+			</div>
 
 		</div>
 	</body>
 	<script style="display: none;">
-		require("./select_entry.js")
+		require("./query.js")
 	</script>
 </html>
