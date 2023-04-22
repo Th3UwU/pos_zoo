@@ -6,6 +6,8 @@
 		<link rel="stylesheet" href="./am_product.css" type="text/css">
 	</head>
 	<body>
+		<span id="localAux" style="display: none;" data-valid-supplier="0"></span>
+
 		<div id="container">
 
 			<label for="id_product">ID Producto</label>
@@ -18,19 +20,19 @@
 			<input id="description" type="text"></input>
 
 			<label for="price">Precio</label>
-			<input id="price" type="text"></input>
+			<input id="price" type="number"></input>
 			
 			<label for="category">Categoria</label>
 			<select id="category" name="category"></select>
 
 			<label for="stock">stock</label>
-			<input id="stock" type="text"></input>
+			<input id="stock" type="number"></input>
 
 			<label for="maxStock">stock maximo</label>
-			<input id="maxStock" type="text"></input>
+			<input id="maxStock" type="number"></input>
 			
 			<label for="localLimit">limite local</label>
-			<input id="localLimit" type="text"></input>
+			<input id="localLimit" type="number"></input>
 
 			<label for="supplier">Proveedor</label>
 			<input id="supplier" type="text"></input>

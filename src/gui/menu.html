@@ -12,16 +12,17 @@
 			<img src="../../res/logo.svg" alt="">
 
 			<button id="button_sale" type="button">Ventas</button>
-			<div class="section_menu" id="section_sale"></div>
+			<div class="section_menu" id="section_sale" data-valid="0"></div>
 
 			<button id="button_order" type="button">Pedidos</button>
-			<div class="section_menu" id="section_order"></div>
+			<div class="section_menu" id="section_order" data-valid="0"></div>
 
 			<button id="button_purchase" type="button">Compras</button>
-			<div class="section_menu" id="section_purchase"></div>
+			<div class="section_menu" id="section_purchase" data-valid="0"></div>
 
 			<button id="button_employee" type="button">Empleados</button>
 			<div class="section_menu" id="section_employee" data-valid="0">
+
 				<div>
 					<button id="button_add_employee" type="button">Registrar empleado</button>
 				</div>
@@ -32,15 +33,28 @@
 					<button id="button_select_employee" type="button">Seleccionar empleado</button>
 				</div>
 				<div>
-					<button id="query_employee" type="button">Consultar empleados</button>
+					<button id="button_query_employee" type="button">Consultar empleados</button>
 				</div>
 			</div>
 
 			<button id="button_product" type="button">Productos</button>
-			<div class="section_menu" id="section_product"></div>
+			<div class="section_menu" id="section_product" data-valid="0">
+				<div>
+					<button id="button_add_product" type="button">Registrar producto</button>
+				</div>
+				<div>
+					<button id="button_modify_product" type="button">Modificar producto</button>
+					<label id="label_product" for="product"></label>
+					<input type="text" id="product">
+					<button id="button_select_product" type="button">Seleccionar producto</button>
+				</div>
+				<div>
+					<button id="button_query_product" type="button">Consultar productos</button>
+				</div>
+			</div>
 
-			<button id="button_store" type="button">Locales</button>
-			<div class="section_menu" id="section_store"></div>
+			<button id="button_store" type="button" data-valid="0">Locales</button>
+			<div class="section_menu" id="section_store" data-valid="0"></div>
 
 		</div>
 	</body>

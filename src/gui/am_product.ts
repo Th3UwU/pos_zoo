@@ -4,7 +4,8 @@ import { readFileSync } from 'fs';
 import Main from '../main';
 
 let main: Main = getGlobal('main');
-let aux: any = getGlobal('aux');
+
+let localAux = document.getElementById('localAux') as HTMLSpanElement;
 
 let id_product = document.getElementById('id_product') as HTMLInputElement;
 let name = document.getElementById('name') as HTMLInputElement;
@@ -39,17 +40,25 @@ for (const c of categories) {
 	category.add(option);
 }
 
-// Select supplier
+/***** Supplier *****/
+supplier.addEventListener('change', async (): Promise<void> => {
+
+	try {
+		let data = (await main.querySQL(`SELECT NAME FROM SUPPLIER WHERE ID_SUPPLIER = ${supplier.value} AND NOT ID_SUPPLIER = 0;`)).rows[0];
+		supplierName.innerHTML = `Nombre: ${data.name}`;
+		localAux.dataset.validSupplier = '1';
+	}
+	catch (error: any){
+		supplierName.innerHTML = 'Proveedor no encontrado';
+		localAux.dataset.validSupplier = '0';
+	}
+});
+
 let buttonSupplier = document.getElementById('buttonSupplier') as HTMLButtonElement;
 buttonSupplier.addEventListener('click', () => {
 
-	// Set aux target
 	main.setProperty({...main.aux, column: 'supplier', canSelect: true}, 'aux');
-
-	// Create query window
 	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
-
-	// Code to set 'id' and 'employee name' at close window
 	let code: string =
 	`
 	try
@@ -58,18 +67,12 @@ buttonSupplier.addEventListener('click', () => {
 		const main = (0, remote_1.getGlobal)('main');
 		document.getElementById('supplier').value = main.aux.return.id_supplier;
 		document.getElementById('supplierName').innerHTML = main.aux.return.name;
-		// document.getElementById('localAux').dataset.validStore = '1';
+		document.getElementById('localAux').dataset.validSupplier = '1';
 	}
-	catch (error)
-	{
-		document.getElementById('supplier').value = main.aux.return.id_supplier;
-		document.getElementById('supplierName').innerHTML = main.aux.return.name;
-	}
+	catch (error) {}
 	`;
 
 	queryWindow.setVar(code, 'codeCloseParent');
-
-	
 });
 
 // Image preview
@@ -101,14 +104,41 @@ buttonCancel.addEventListener('click', (): void => {
 
 async function MAIN(): Promise<void> {
 
+	id_product.readOnly = true;
+
 	// Add new product
-	if (aux.action == 'a')
+	if (main.aux.action == 'a')
 	{
+		// Get 'new id'
+		let new_id: number = (await main.querySQL(`SELECT MAX(ID_PRODUCT) FROM PRODUCT`)).rows[0].max;
+		new_id++;
+
+		// Set 'new id' in the input field
+		id_product.value = `${new_id}`;
+
+		status.disabled = true;
+
 		buttonAccept.addEventListener('click', async (): Promise<void> => {
 
 			try {
-				let imageRaw: string = readFileSync(imagePath.value, null).toString('base64');
-				let query: string = `INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, '${supplier.value}', '${name.value}', '${description.value}', '${price.value}', '${category.value}', '${stock.value}', '${maxStock.value}', '${localLimit.value}', DEFAULT, (DECODE('${imageRaw}', 'base64')));`;
+
+				checkInvalidStock();
+
+				if (emptyInputs())
+					throw {message: "No puede haber campos vacíos"};
+
+				if (localAux.dataset.validSupplier == '0')
+					throw {message: "El proveedor seleccionado no es válido"};
+
+				let imageRaw: string = null;
+				if (imagePath.value)
+					imageRaw = readFileSync(imagePath.value, null).toString('base64');
+			
+				let query: string = `INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1,
+				'${supplier.value}', '${name.value}', '${description.value}', '${price.value}',
+				'${category.value}', '${stock.value}', '${maxStock.value}', '${localLimit.value}', DEFAULT, `
+				+ ((imageRaw) ? (`(DECODE('${imageRaw}', 'base64')));`) : (`DEFAULT);`));
+
 				console.log(query);
 				await main.querySQL(query);
 				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Registro exitoso", type: "info"});
@@ -122,12 +152,13 @@ async function MAIN(): Promise<void> {
 		});
 	}
 	// Modify product
-	else if (aux.action == 'm')
+	else if (main.aux.action == 'm')
 	{
 		// Get entry to modify
-		let product: any = (await main.querySQL(`SELECT * FROM PRODUCT WHERE id_product = ${aux.id};`)).rows[0];
+		let product: any = (await main.querySQL(`SELECT * FROM PRODUCT WHERE id_product = ${main.aux.id};`)).rows[0];
 
 		// Populate inputs with existing info
+		id_product.value = product.id_product;
 		name.value = product.name;
 		description.value = product.description;
 		price.value = product.price;
@@ -152,6 +183,11 @@ async function MAIN(): Promise<void> {
 		buttonAccept.addEventListener('click', async (): Promise<void> => {
 		
 			try {
+
+				checkInvalidStock();
+
+				if (emptyInputs())
+					throw {message: "No puede haber campos vacíos"};
 				
 				let imageRaw: string = null;
 				if (imagePath.value != "")
@@ -162,8 +198,7 @@ async function MAIN(): Promise<void> {
 				fk_supplier = '${supplier.value}', name = '${name.value}', description = '${description.value}',
 				price = '${price.value}', category = '${category.value}', stock = '${stock.value}',
 				max_stock = '${maxStock.value}', local_limit = '${localLimit.value}', status = '${status.checked}'`
-				+ ((imageRaw) ? (`, image = (DECODE('${imageRaw}', 'base64')) WHERE id_product = ${aux.id};`) : (` WHERE id_product = ${aux.id};`));
-				
+				+ ((imageRaw) ? (`, image = (DECODE('${imageRaw}', 'base64')) WHERE id_product = ${main.aux.id};`) : (` WHERE id_product = ${main.aux.id};`));
 
 				console.log(query);
 				await main.querySQL(query);
@@ -181,3 +216,25 @@ async function MAIN(): Promise<void> {
 
 }
 MAIN();
+
+function emptyInputs(): boolean
+{
+	let inputs = document.getElementsByTagName('input');
+	for (const i of inputs)
+	{	
+		// Ignore
+		if (i.id == 'image')
+			continue;
+
+		if (i.value == '')
+			return true;
+	}
+
+	return false;
+}
+
+function checkInvalidStock(): void
+{
+	if (parseInt(stock.value) > parseInt(maxStock.value))
+		throw {message: "El stock actual no puede ser mayor al stock maximo"};
+}

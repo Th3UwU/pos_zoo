@@ -36,7 +36,7 @@ button_employee.addEventListener('click', (): void => {hideSubmenus(); section_e
 button_product.addEventListener('click', (): void => {hideSubmenus(); section_product.style.display = 'block';});
 button_store.addEventListener('click', (): void => {hideSubmenus(); section_store.style.display = 'block';});
 
-// Employee
+/***** Employee *****/
 let employee = document.getElementById('employee') as HTMLInputElement;
 let label_employee = document.getElementById('label_employee') as HTMLLabelElement;
 
@@ -92,6 +92,76 @@ button_select_employee.addEventListener('click', (): void => {
 	catch (error) {}
 	`;
 	queryWindow.setVar(code, 'codeCloseParent');
+});
+
+let button_query_employee = document.getElementById('button_query_employee') as HTMLButtonElement;
+button_query_employee.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, column: 'employee', canSelect: false}, 'aux');
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+});
+
+/***** Product *****/
+let product = document.getElementById('product') as HTMLInputElement;
+let label_product = document.getElementById('label_product') as HTMLLabelElement;
+
+product.addEventListener('change', async (): Promise<void> => {
+
+	try {
+		let data = (await main.querySQL(`SELECT NAME FROM PRODUCT WHERE ID_PRODUCT = ${product.value} AND NOT ID_PRODUCT = 0;`)).rows[0];
+		label_product.innerHTML =  data.name + ', ID:';
+		section_product.dataset.valid = '1';
+	}
+	catch (error: any){
+		label_product.innerHTML = 'Producto no encontrado';
+		section_product.dataset.valid = '0';
+	}
+});
+
+let button_add_product = document.getElementById('button_add_product') as HTMLButtonElement;
+button_add_product.addEventListener('click', (): void => {
+	main.setProperty({action: 'a', id: '-1'}, 'aux');
+	main.createWindow(800, 600, 'gui/am_product.html', getCurrentWindow());
+});
+
+let button_modify_product = document.getElementById('button_modify_product') as HTMLButtonElement;
+button_modify_product.addEventListener('click', (): void => {
+
+	try {
+		if (section_product.dataset.valid == '0')
+			throw {message: "El producto seleccionado no es válido"};
+
+		main.setProperty({action: 'm', id: product.value}, 'aux');
+		main.createWindow(800, 600, 'gui/am_product.html', getCurrentWindow());
+	}
+	catch (error: any) {
+		console.log(error);
+		dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+	}
+});
+
+let button_select_product = document.getElementById('button_select_product') as HTMLButtonElement;
+button_select_product.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, column: 'product', canSelect: true}, 'aux');
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+	let code: string =
+	`
+	try
+	{
+		const remote_1 = require("@electron/remote");
+		const main = (0, remote_1.getGlobal)('main');
+		document.getElementById('product').value = main.aux.return.id_product;
+		document.getElementById('label_product').innerHTML = main.aux.return.name + ', ID:';
+		document.getElementById('section_product').dataset.valid = '1';
+	}
+	catch (error) {}
+	`;
+	queryWindow.setVar(code, 'codeCloseParent');
+});
+
+let button_query_product = document.getElementById('button_query_product') as HTMLButtonElement;
+button_query_product.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, column: 'product', canSelect: false}, 'aux');
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
 });
 
 

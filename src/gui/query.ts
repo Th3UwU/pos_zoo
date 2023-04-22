@@ -19,7 +19,7 @@ switch (main.aux.column) {
 		break;
 
 	case "product":
-		visibleColumns = ['id_product', 'name', 'price'];
+		visibleColumns = ['id_product', 'name', 'price', 'image'];
 		matchRow = 'name';
 		break;
 
@@ -69,20 +69,31 @@ async function search(): Promise<void>
 		resultContainer.className = 'result';
 		
 		for (const j of visibleColumns) {
-			// Row text
-			let row = document.createElement('span') as HTMLSpanElement;
 			
-			if (j.includes('fecha'))
+			
+			if (j.includes('date'))
 			{
-				console.log(i);
+				let row = document.createElement('span') as HTMLSpanElement;
 				let date: Date = new Date(i[j]);
 				row.innerHTML = `${j}: ${date.toISOString().substring(0, 10)}`;
+				row.style.display = 'block';
+				resultContainer.appendChild(row);
+			}
+			else if ((j.includes('image')) && (i[j]))
+			{
+				let imagePreview = document.createElement('img') as HTMLImageElement;
+				imagePreview.src = URL.createObjectURL(new Blob([i[j].buffer], {type: "image/png"}));
+				imagePreview.style.display = 'block';
+				resultContainer.appendChild(imagePreview);
 			}
 			else
+			{
+				let row = document.createElement('span') as HTMLSpanElement;
 				row.innerHTML = `${j}: ${i[j]}`;
+				row.style.display = 'block';
+				resultContainer.appendChild(row);
+			}
 
-			row.style.display = 'block';
-			resultContainer.appendChild(row);
 		}
 		
 		// Button
