@@ -68,15 +68,19 @@ async function MAIN(): Promise<void> {
 		// Set 'new id' in the input field
 		id_employee.value = `${new_id}`;
 
+		status.disabled = true;
+
 		buttonAccept.addEventListener('click', async (): Promise<void> => {
 
 			try {
+
+				checkValidFields();
 
 				let CVRaw: string = null;
 				if (CVPath.value)
 					CVRaw = readFileSync(CVPath.value, null).toString('base64');
 
-				let query: string = `INSERT INTO EMPLOYEE VALUES(new_id,
+				let query: string = `INSERT INTO EMPLOYEE VALUES(${new_id},
 				'${pass.value}', '${curp.value}', '${firstName.value}', '${lastName.value}',
 				'${address.value}', '${nss.value}', '${role.value}', `
 				+ ((CVRaw) ? (`(DECODE('${CVRaw}', 'base64')), DEFAULT);`) : (`DEFAULT, DEFAULT);`));
@@ -150,6 +154,9 @@ async function MAIN(): Promise<void> {
 		buttonAccept.addEventListener('click', async (): Promise<void> => {
 
 			try {
+				
+				checkValidFields();
+
 				let CVRaw: string = null;
 				if (CVPath.value != "")
 					CVRaw = readFileSync(CVPath.value, null).toString('base64');
@@ -175,3 +182,17 @@ async function MAIN(): Promise<void> {
 	}
 }
 MAIN();
+
+function checkValidFields(): void
+{
+	let inputs = document.getElementsByTagName('input');
+	for (const i of inputs)
+	{
+		// Ignore
+		if (i.id == 'cv')
+			continue;
+
+		if (i.value == '')
+			throw {message: `El campo '${i.id}' no puede estar vacio`};
+	}
+}
