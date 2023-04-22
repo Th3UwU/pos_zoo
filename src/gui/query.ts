@@ -12,6 +12,21 @@ switch (main.aux.column) {
 		visibleColumns = ['id_store', 'location', 'hours'];
 		matchRow = 'location';
 		break;
+
+	case "supplier":
+		visibleColumns = ['id_supplier', 'name'];
+		matchRow = 'name';
+		break;
+
+	case "product":
+		visibleColumns = ['id_product', 'name', 'price'];
+		matchRow = 'name';
+		break;
+
+	case "employee":
+		visibleColumns = ['id_employee', 'first_name', 'last_name', 'role'];
+		matchRow = 'first_name';
+		break;
 };
 
 let search_bar = document.getElementById('search_bar') as HTMLInputElement;

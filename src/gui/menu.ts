@@ -1,40 +1,97 @@
-import { getCurrentWindow, getGlobal } from '@electron/remote';
+import { getCurrentWindow, dialog, BrowserWindow, getGlobal } from '@electron/remote';
+import { OpenDialogOptions } from 'electron';
 import Main from '../main';
+import { Query, QueryResult } from 'pg';
 
 let main: Main = getGlobal('main');
-let aux: any = getGlobal('aux');
 
+// General
+let section_sale = document.getElementById('section_sale') as HTMLDivElement;
+let section_order = document.getElementById('section_order') as HTMLDivElement;
+let section_purchase = document.getElementById('section_purchase') as HTMLDivElement;
+let section_employee = document.getElementById('section_employee') as HTMLDivElement;
+let section_product = document.getElementById('section_product') as HTMLDivElement;
+let section_store = document.getElementById('section_sale') as HTMLDivElement;
 
-let amButtons = document.getElementsByClassName('amButton') as HTMLCollectionOf<HTMLButtonElement>;
-let selectEntryButtons = document.getElementsByClassName('selectEntry') as HTMLCollectionOf<HTMLButtonElement>;
+let button_sale = document.getElementById('button_sale') as HTMLButtonElement;
+let button_order = document.getElementById('button_order') as HTMLButtonElement;
+let button_purchase = document.getElementById('button_purchase') as HTMLButtonElement;
+let button_employee = document.getElementById('button_employee') as HTMLButtonElement;
+let button_product = document.getElementById('button_product') as HTMLButtonElement;
+let button_store = document.getElementById('button_store') as HTMLButtonElement;
 
-async function MAIN(): Promise<void> {
-
-	// Hide stuff
-	if (!main.credentials.role.includes('gerente'))
-		(document.getElementById('section_manager') as HTMLDivElement).style.display = 'none';
-
-	// AM Buttons
-	for (const button of amButtons) {
-		button.addEventListener('click', (): void => {
-
-			let input = document.getElementById(button.dataset.column) as HTMLInputElement;
-
-			main.setGlobal({action: button.dataset.action, id: ((button.dataset.action == 'a') ? ('-1') : (input.value))}, 'aux');
-			main.createWindow(800, 600, 'gui/am_' + button.dataset.column + '.html', getCurrentWindow());
-		});
-	}
-
-	// Select entry button
-	for (const button of selectEntryButtons) {
-		button.addEventListener('click', (): void => {
-
-			main.setGlobal({...aux, selectEntryColumn: button.dataset.inputDst, returnInput: `document.getElementById('${button.dataset.inputDst}')`}, 'aux');
-			console.log(getGlobal('aux'));
-			main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
-		});
-	}
-
-
+let section_menu = document.getElementsByClassName('section_menu') as HTMLCollectionOf<HTMLDivElement>;
+// Hide all sub-menus
+function hideSubmenus()
+{
+	for (const s of section_menu)
+		s.style.display = 'none';
 }
-MAIN();
+hideSubmenus();
+
+button_sale.addEventListener('click', (): void => {hideSubmenus(); section_sale.style.display = 'block';});
+button_order.addEventListener('click', (): void => {hideSubmenus(); section_order.style.display = 'block';});
+button_purchase.addEventListener('click', (): void => {hideSubmenus(); section_purchase.style.display = 'block';});
+button_employee.addEventListener('click', (): void => {hideSubmenus(); section_employee.style.display = 'block';});
+button_product.addEventListener('click', (): void => {hideSubmenus(); section_product.style.display = 'block';});
+button_store.addEventListener('click', (): void => {hideSubmenus(); section_store.style.display = 'block';});
+
+// Employee
+let employee = document.getElementById('employee') as HTMLInputElement;
+let label_employee = document.getElementById('label_employee') as HTMLLabelElement;
+
+employee.addEventListener('change', async (): Promise<void> => {
+
+	try {
+		let data = (await main.querySQL(`SELECT FIRST_NAME, LAST_NAME FROM EMPLOYEE WHERE ID_EMPLOYEE = ${employee.value} AND NOT ID_EMPLOYEE = 0;`)).rows[0];
+		label_employee.innerHTML =  data.first_name + ' ' + data.last_name + ', ID:';
+		section_employee.dataset.valid = '1';
+	}
+	catch (error: any){
+		label_employee.innerHTML = 'Empleado no encontrado';
+		section_employee.dataset.valid = '0';
+	}
+});
+
+let button_add_employee = document.getElementById('button_add_employee') as HTMLButtonElement;
+button_add_employee.addEventListener('click', (): void => {
+	main.setProperty({action: 'a', id: '-1'}, 'aux');
+	main.createWindow(800, 600, 'gui/am_employee.html', getCurrentWindow());
+});
+
+let button_modify_employee = document.getElementById('button_modify_employee') as HTMLButtonElement;
+button_modify_employee.addEventListener('click', (): void => {
+
+	try {
+		if (section_employee.dataset.valid == '0')
+			throw {message: "El empleado seleccionado no es válido"};
+
+		main.setProperty({action: 'm', id: employee.value}, 'aux');
+		main.createWindow(800, 600, 'gui/am_employee.html', getCurrentWindow());
+	}
+	catch (error: any) {
+		console.log(error);
+		dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+	}
+});
+
+let button_select_employee = document.getElementById('button_select_employee') as HTMLButtonElement;
+button_select_employee.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, column: 'employee', canSelect: true}, 'aux');
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+	let code: string =
+	`
+	try
+	{
+		const remote_1 = require("@electron/remote");
+		const main = (0, remote_1.getGlobal)('main');
+		document.getElementById('employee').value = main.aux.return.id_employee;
+		document.getElementById('label_employee').innerHTML = main.aux.return.first_name + ' ' + main.aux.return.last_name + ', ID:';
+		document.getElementById('section_employee').dataset.valid = '1';
+	}
+	catch (error) {}
+	`;
+	queryWindow.setVar(code, 'codeCloseParent');
+});
+
+

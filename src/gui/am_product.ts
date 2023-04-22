@@ -6,6 +6,7 @@ import Main from '../main';
 let main: Main = getGlobal('main');
 let aux: any = getGlobal('aux');
 
+let id_product = document.getElementById('id_product') as HTMLInputElement;
 let name = document.getElementById('name') as HTMLInputElement;
 let description = document.getElementById('description') as HTMLInputElement;
 let price = document.getElementById('price') as HTMLInputElement;
@@ -14,6 +15,7 @@ let stock = document.getElementById('stock') as HTMLInputElement;
 let maxStock = document.getElementById('maxStock') as HTMLInputElement;
 let localLimit = document.getElementById('localLimit') as HTMLInputElement;
 let supplier = document.getElementById('supplier') as HTMLInputElement;
+let supplierName = document.getElementById('supplierName') as HTMLSpanElement;
 let imagePath = document.getElementById('image') as HTMLInputElement;
 let status = document.getElementById('status') as HTMLInputElement;
 
@@ -41,10 +43,32 @@ for (const c of categories) {
 let buttonSupplier = document.getElementById('buttonSupplier') as HTMLButtonElement;
 buttonSupplier.addEventListener('click', () => {
 
-	let newAux = {...aux, selectEntryColumn: 'supplier', returnInput: `document.getElementById('supplier')`};
-	main.setGlobal(newAux, 'aux');
+	// Set aux target
+	main.setProperty({...main.aux, column: 'supplier', canSelect: true}, 'aux');
 
-	main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
+	// Create query window
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+
+	// Code to set 'id' and 'employee name' at close window
+	let code: string =
+	`
+	try
+	{
+		const remote_1 = require("@electron/remote");
+		const main = (0, remote_1.getGlobal)('main');
+		document.getElementById('supplier').value = main.aux.return.id_supplier;
+		document.getElementById('supplierName').innerHTML = main.aux.return.name;
+		// document.getElementById('localAux').dataset.validStore = '1';
+	}
+	catch (error)
+	{
+		document.getElementById('supplier').value = main.aux.return.id_supplier;
+		document.getElementById('supplierName').innerHTML = main.aux.return.name;
+	}
+	`;
+
+	queryWindow.setVar(code, 'codeCloseParent');
+
 	
 });
 

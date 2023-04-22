@@ -17,9 +17,6 @@ let buttonLogin = document.getElementById('buttonLogin') as HTMLButtonElement;
 // Button supplier
 buttonStore.addEventListener('click', () => {
 
-	let newAux = {...aux, selectEntryColumn: 'store', returnInput: `document.getElementById('store')`};
-	main.setGlobal(newAux, 'aux');
-
 	// Set aux target
 	main.setProperty({...main.aux, column: 'store', canSelect: true}, 'aux');
 
@@ -37,12 +34,7 @@ buttonStore.addEventListener('click', () => {
 		document.getElementById('storeName').innerHTML = main.aux.return.location;
 		document.getElementById('localAux').dataset.validStore = '1';
 	}
-	catch (error)
-	{
-		document.getElementById('store').value = main.aux.return.id_store;
-		document.getElementById('storeName').innerHTML = main.aux.return.location;
-		document.getElementById('localAux').dataset.validStore = '1';
-	}
+	catch (error) {}
 	`;
 
 	queryWindow.setVar(code, 'codeCloseParent');
