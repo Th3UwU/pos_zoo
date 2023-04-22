@@ -11,6 +11,9 @@ let idProduct = document.getElementById('idProduct') as HTMLInputElement;
 let buttonSelectProduct = document.getElementById('buttonSelectProduct') as HTMLButtonElement;
 let buttonAddProduct = document.getElementById('buttonAddProduct') as HTMLButtonElement;
 
+let idOrder = document.getElementById('idOrder') as HTMLInputElement;
+let headerInfo = document.getElementById('headerInfo') as HTMLSpanElement;
+
 let templateProduct: HTMLDivElement = (document.getElementById('templateProduct') as HTMLTemplateElement).content.querySelector('div');
 let product_list = document.getElementById('product_list') as HTMLDivElement;
 
@@ -96,33 +99,60 @@ buttonCancel.addEventListener('click', (): void => {
 let buttonAccept = document.getElementById('buttonAccept') as HTMLButtonElement;
 async function MAIN(): Promise<void>
 {
+	idOrder.readOnly = true;
+
 	if (main.aux.action == 'a')
 	{
+		let new_id: number = (await main.querySQL(`SELECT MAX(ID_PRODUCT_ORDER) FROM PRODUCT_ORDER`)).rows[0].max;
+		new_id++;
+		idOrder.value = `${new_id}`;
+		
+		let idStore: number = main.credentials.idStore;
+		let idEmployee: number = main.credentials.idEmployee;
+
+		let employeeName: string = (await main.querySQL(`SELECT FIRST_NAME FROM EMPLOYEE WHERE ID_EMPLOYEE = ${idEmployee};`)).rows[0].first_name;
+		let storeInfo = (await main.querySQL(`SELECT * FROM STORE WHERE ID_STORE = ${idStore};`)).rows[0];
+		headerInfo.innerHTML = `ID Empleado: ${idEmployee} (${employeeName}), ID Local: ${idStore} (${storeInfo.location} - ${storeInfo.type})`;
+
 		buttonAccept.addEventListener('click', async (): Promise<void> => {
 
 			try
 			{
-				let idStore: number = main.credentials.idStore;
 		
-				// Iterar entre cada producto de la lista
 				let addedProducts = document.getElementsByClassName('product') as HTMLCollectionOf<HTMLDivElement>;
 				if (addedProducts.length == 0)
 					throw {message: "Seleccione por lo menos 1 producto"};
-		
-				/*
+
+				// Check stock and local_limit
+				let localStoreProducts = (await main.querySQL(`SELECT * FROM STORE_PRODUCT WHERE FK_STORE = ${idStore};`)).rows;
+
 				for (const ap of addedProducts)
 				{
-					let result: any[] = (await main.querySQL(`SELECT * FROM STORE_PRODUCT WHERE ((FK_PRODUCT = ${ap.dataset.idProduct}) AND (FK_STORE = ${idStore}));`)).rows;
-					if (result.length == 0)
+					let productInfo = (await main.querySQL(`SELECT NAME, STOCK, LOCAL_LIMIT FROM PRODUCT WHERE ID_PRODUCT = ${ap.dataset.idProduct}`)).rows[0];
+					let desiredAmount: number = parseInt((ap.querySelector('.amount') as HTMLInputElement).value);
+
+					// Calcular el stock local actual
+					let currentLocalStock: number = 0;
+					for (const lsp of localStoreProducts)
 					{
-						
+						if (lsp.fk_product == ap.dataset.idProduct)
+							currentLocalStock = parseInt(lsp.local_stock);
 					}
-					else
-					{
-		
-					}
+					
+					// Comprobar
+					if ((currentLocalStock + desiredAmount) > parseInt(productInfo.local_limit))
+						throw {message: `La cantidad seleccionada de '${productInfo.name}' excede el stock local!!`};
+
+					if (desiredAmount > parseInt(productInfo.stock))
+						throw {message: `El almacén no cuenta con suficiente stock de '${productInfo.name}'!!`};
 				}
-				*/
+
+				// Query
+				await main.querySQL(`INSERT INTO PRODUCT_ORDER VALUES(${new_id}, ${idEmployee}, ${idStore}, DEFAULT, DEFAULT);`);
+				for (const ap of addedProducts)
+					await main.querySQL(`INSERT INTO PRODUCT_ORDER_DETAIL VALUES(
+					(SELECT MAX(ID_PRODUCT_ORDER_DETAIL) FROM PRODUCT_ORDER_DETAIL) + 1,
+					${new_id}, ${ap.dataset.idProduct}, ${(ap.querySelector('.amount') as HTMLInputElement).value});`);
 			}
 			catch (error: any)
 			{
