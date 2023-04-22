@@ -6,11 +6,13 @@
 		<link rel="stylesheet" href="./am_sale.css" type="text/css">
 	</head>
 	<body>
+		<span id="localAux" style="display: none;" data-valid-product="0" data-valid-employee="1"></span>
+
 		<div id="container">
 
 			<div class="section", id="section_product" style="display: none">
 
-				<label for="idProduct">ID: </label>
+				<label id="label_idProduct" for="idProduct">ID: </label>
 				<input id="idProduct" type="text"></input>
 				<button id="buttonSelectProduct" type="button">Seleccionar...</button>
 				<button id="buttonAddProduct" type="button">Agregar</button>
@@ -19,6 +21,7 @@
 					<div class="product">
 						<span class="productId"></span>
 						<span class="name"></span>
+						<span class="price"></span>
 						<label><input class="amount" type="number" min="1"></label>
 						<button class="buttonDelete" type="button">Eliminar</button>
 					</div>
@@ -56,7 +59,7 @@
 				<!-- HEADER -->
 				<span id="idSale"></span>
 
-				<label for="idEmployee">ID Empleado</label>
+				<label id="label_idEmployee" for="idEmployee">ID Empleado</label>
 				<input id="idEmployee" type="text"></input>
 				<button id="buttonEmployee" type="button">Seleccionar empleado...</button>
 
@@ -65,11 +68,12 @@
 
 				<!-- DETAIL -->
 				<template id="templateDetail">
-					<div class="detail">
+					<div class="detail" data-valid="0">
 
 						<label>ID Producto<input class="idProduct" type="number" min="1"></label>
 						<button class="buttonProduct" type="button">Seleccionar producto...</button>
 
+						<label class="product_info"></label>
 						<label>Cantidad<input class="amount" type="number" min="1"></label>
 						<label>Coste unitario<input class="cost" type="number" min="0"></label>
 

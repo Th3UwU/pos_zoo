@@ -37,6 +37,11 @@ switch (main.aux.column) {
 		visibleColumns = ['id_product_order', 'date', 'fk_store', 'fk_employee'];
 		matchRow = null;
 		break;
+
+	case "sale":
+		visibleColumns = ['id_sale', 'date'];
+		matchRow = null;
+		break;
 };
 
 let search_bar = document.getElementById('search_bar') as HTMLInputElement;
@@ -89,6 +94,19 @@ async function search(): Promise<void>
 		}
 		break;
 
+	case "sale":
+		if (isNumber)
+		{
+			query = `SELECT * FROM sale WHERE `
+			+ `id_sale = ${parseInt(search_bar.value)}`
+			+ ` AND NOT id_sale = 0;`;
+		}
+		else
+		{
+			query = `SELECT * FROM sale;`;
+		}
+		break;
+		
 	default:
 		query = `SELECT * FROM ${main.aux.column} WHERE ` +
 		((isNumber) ? (`id_${main.aux.column} = ${parseInt(search_bar.value)};`) : (`LOWER(${matchRow}) LIKE LOWER('%${search_bar.value}%')`))

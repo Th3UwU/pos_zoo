@@ -39,6 +39,71 @@ button_employee.addEventListener('click', (): void => {hideSubmenus(); section_e
 button_product.addEventListener('click', (): void => {hideSubmenus(); section_product.style.display = 'block';});
 button_store.addEventListener('click', (): void => {hideSubmenus(); section_store.style.display = 'block';});
 
+/***** Sale *****/
+let sale = document.getElementById('sale') as HTMLInputElement;
+let label_sale = document.getElementById('label_sale') as HTMLLabelElement;
+
+sale.addEventListener('change', async (): Promise<void> => {
+
+	try {
+		let data = (await main.querySQL(`SELECT DATE FROM SALE WHERE ID_SALE = ${sale.value} AND NOT ID_SALE = 0;`)).rows[0];
+		label_sale.innerHTML = (data.date as Date).toISOString().substring(0, 10) + ', ID:';
+		section_sale.dataset.valid = '1';
+	}
+	catch (error: any){
+		label_sale.innerHTML = 'Venta no encontrada';
+		section_sale.dataset.valid = '0';
+	}
+});
+
+let button_add_sale = document.getElementById('button_add_sale') as HTMLButtonElement;
+button_add_sale.addEventListener('click', (): void => {
+	main.setProperty({action: 'a', id: '-1'}, 'aux');
+	main.createWindow(800, 600, 'gui/am_sale.html', getCurrentWindow());
+});
+
+let button_modify_sale = document.getElementById('button_modify_sale') as HTMLButtonElement;
+button_modify_sale.addEventListener('click', (): void => {
+
+	try {
+		if (section_sale.dataset.valid == '0')
+			throw {message: "La venta seleccionada no es válida"};
+
+		main.setProperty({action: 'm', id: sale.value}, 'aux');
+		main.createWindow(800, 600, 'gui/am_sale.html', getCurrentWindow());
+	}
+	catch (error: any) {
+		console.log(error);
+		dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+	}
+});
+
+let button_select_sale = document.getElementById('button_select_sale') as HTMLButtonElement;
+button_select_sale.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, column: 'sale', canSelect: true}, 'aux');
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+	let code: string =
+	`
+	try
+	{
+		const remote_1 = require("@electron/remote");
+		const main = (0, remote_1.getGlobal)('main');
+		document.getElementById('sale').value = main.aux.return.id_sale;
+		document.getElementById('label_sale').innerHTML = main.aux.return.date.toISOString().substring(0, 10) + ', ID:';
+		document.getElementById('section_sale').dataset.valid = '1';
+	}
+	catch (error) {}
+	`;
+	queryWindow.setVar(code, 'codeCloseParent');
+});
+
+let button_query_sale = document.getElementById('button_query_sale') as HTMLButtonElement;
+button_query_sale.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, column: 'sale', canSelect: false}, 'aux');
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+});
+
+
 /***** Order *****/
 let order = document.getElementById('order') as HTMLInputElement;
 let label_order = document.getElementById('label_order') as HTMLLabelElement;

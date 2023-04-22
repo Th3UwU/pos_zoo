@@ -4,7 +4,8 @@ import Main from '../main';
 import { Query } from 'pg';
 
 let main: Main = getGlobal('main');
-let aux: any = getGlobal('aux');
+
+let localAux = document.getElementById('localAux') as HTMLSpanElement;
 
 // ONLY Modify mode
 let templateDetail = (document.getElementById('templateDetail') as HTMLTemplateElement).content.querySelector('div');
@@ -24,7 +25,7 @@ for (const button of buttonCancel) {
 async function MAIN(): Promise<void> {
 	
 	// Add new sale
-	if (aux.action == 'a')
+	if (main.aux.action == 'a')
 	{
 		// Show product section
 		document.getElementById('section_product').style.display = 'block';
@@ -35,6 +36,7 @@ async function MAIN(): Promise<void> {
 		let buttonAddProduct = document.getElementById('buttonAddProduct') as HTMLButtonElement;
 		let idProduct = document.getElementById('idProduct') as HTMLInputElement;
 		let productList = document.getElementById('productList') as HTMLDivElement;
+		let label_idProduct = document.getElementById('label_idProduct') as HTMLLabelElement;
 		
 		// Accept buttons
 		let buttonAccept1 = document.getElementById('buttonAccept1') as HTMLButtonElement;
@@ -51,15 +53,48 @@ async function MAIN(): Promise<void> {
 		};
 		let shoppingCart: ShoppingCart[] = [];
 
+		idProduct.addEventListener('change', async (): Promise<void> => {
+
+			try {
+				let data = (await main.querySQL(`SELECT NAME FROM PRODUCT WHERE ID_PRODUCT = ${idProduct.value} AND NOT ID_PRODUCT = 0;`)).rows[0];
+				label_idProduct.innerHTML = data.name + ', ID:';
+				localAux.dataset.validProduct = '1';
+			}
+			catch (error: any){
+				label_idProduct.innerHTML = 'Producto no encontrado';
+				localAux.dataset.validProduct = '0';
+			}
+		});
+
 		// Select product button
 		buttonSelectProduct.addEventListener('click', (): void => {
 
-			main.setGlobal({...aux, selectEntryColumn: 'product', returnInput: `document.getElementById('idProduct')`}, 'aux');
-			main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
+			main.setProperty({...main.aux, column: 'product', canSelect: true}, 'aux');
+			let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+			let code: string =
+			`
+			try
+			{
+				const remote_1 = require("@electron/remote");
+				const main = (0, remote_1.getGlobal)('main');
+				document.getElementById('idProduct').value = main.aux.return.id_product;
+				document.getElementById('label_idProduct').innerHTML = main.aux.return.name + ', ID:';
+				document.getElementById('localAux').dataset.validProduct = '1';
+			}
+			catch (error) {}
+			`;
+			queryWindow.setVar(code, 'codeCloseParent');
+
 		});
 
 		// Add product to list	
 		buttonAddProduct.addEventListener('click', async (): Promise<void> => {
+
+			if (localAux.dataset.validProduct == '0')
+			{
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: "Producto inválido", type: "error"});
+				return;
+			}
 
 			// Check if it's already in the list
 			let added: HTMLDivElement = null;
@@ -82,6 +117,7 @@ async function MAIN(): Promise<void> {
 				let productInstance = <HTMLDivElement>(templateProduct).content.cloneNode(true);
 				productInstance.querySelector('.productId').innerHTML = productEntry.id_product;
 				productInstance.querySelector('.name').innerHTML = productEntry.name;
+				productInstance.querySelector('.price').innerHTML = `$${productEntry.price}`;
 				(productInstance.querySelector('.amount') as HTMLInputElement).value = '1';
 	
 				// Remove element from list event
@@ -100,6 +136,12 @@ async function MAIN(): Promise<void> {
 
 			// Get shopping cart
 			let addedProducts = document.getElementsByClassName('product') as HTMLCollectionOf<HTMLDivElement>;
+			if (addedProducts.length == 0)
+			{
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: "Debe seleccionar almenos 1 producto", type: "error"});
+				return;
+			}
+
 			for (const p of addedProducts) {
 
 				shoppingCart.push({idProduct: parseInt(p.querySelector('.productId').innerHTML), amount: parseInt((p.querySelector('.amount') as HTMLInputElement).value)});
@@ -208,17 +250,38 @@ async function MAIN(): Promise<void> {
 		});
 	}
 	// Modify sale
-	else if (aux.action == 'm')
+	else if (main.aux.action == 'm')
 	{
 		await refreshSaleModifyInputs();
+		
+		
+		let label_idEmployee = document.getElementById('label_idEmployee') as HTMLLabelElement;
+		let idEmployee_input = document.getElementById('idEmployee') as HTMLButtonElement;
+
+		let employeeName: string = (await main.querySQL(`SELECT FIRST_NAME FROM EMPLOYEE WHERE ID_EMPLOYEE = ${idEmployee_input.value} AND NOT ID_EMPLOYEE = 0;`)).rows[0].first_name;
+		label_idEmployee.innerHTML = employeeName + ', ID:';
+
+		idEmployee_input.addEventListener('change', async (): Promise<void> => {
+
+			try {
+				let data = (await main.querySQL(`SELECT FIRST_NAME FROM EMPLOYEE WHERE ID_EMPLOYEE = ${idEmployee_input.value} AND NOT ID_EMPLOYEE = 0;`)).rows[0];
+				label_idEmployee.innerHTML = data.first_name + ', ID:';
+				localAux.dataset.validEmployee = '1';
+			}
+			catch (error: any){
+				label_idEmployee.innerHTML = 'Empleado no encontrado';
+				localAux.dataset.validEmployee = '0';
+			}
+		});
+
 
 		// Button add new product
 		let buttonAddProductDetail = document.getElementById('buttonAddProductDetail') as HTMLButtonElement;
-		buttonAddProductDetail.addEventListener('click', (): void => {
+		buttonAddProductDetail.addEventListener('click', async (): Promise<void> => {
 
 			console.log('adding');
 
-			addNewSaleDetail(0, 1, 0, auxIDDetail);
+			await addNewSaleDetail(0, 1, 0, auxIDDetail);
 			auxIDDetail += 1;
 
 		});
@@ -228,11 +291,19 @@ async function MAIN(): Promise<void> {
 		buttonAcceptModify.addEventListener('click', async (): Promise<void> => {
 
 			try {
+				
+				if (localAux.dataset.validEmployee == '0')
+					throw {message: "Empleado inválido"};
+
+				let details = document.getElementsByClassName('detail') as HTMLCollectionOf<HTMLDivElement>;
+				for (const d of details)
+					if (d.dataset.valid == '0')
+						throw {message: "Producto inválido"};
 
 				let query: string = ``;
 
 				// Delete ALL old sale details
-				query = `DELETE FROM SALE_DETAIL WHERE FK_SALE = ${aux.id};`;
+				query = `DELETE FROM SALE_DETAIL WHERE FK_SALE = ${main.aux.id};`;
 				console.log(query);
 				await main.querySQL(query);
 
@@ -243,20 +314,19 @@ async function MAIN(): Promise<void> {
 				query =
 				`UPDATE SALE SET
 				FK_EMPLOYEE = ${idEmployee}, DATE = '${newDate}'
-				WHERE ID_SALE = ${aux.id};
+				WHERE ID_SALE = ${main.aux.id};
 				`;
 				console.log(query);
 				await main.querySQL(query);
 
 				// Add ALL the new sale details
-				let details = document.getElementsByClassName('detail') as HTMLCollectionOf<HTMLDivElement>;
 				for (const d of details) {
 
 					query =
 					`
 						INSERT INTO SALE_DETAIL VALUES(
 							(SELECT MAX(ID_SALE_DETAIL) FROM SALE_DETAIL) + 1,
-							${aux.id},
+							${main.aux.id},
 							${parseInt((d.querySelector('.idProduct') as HTMLInputElement).value)},
 							${parseInt((d.querySelector('.amount') as HTMLInputElement).value)},
 							${parseFloat((d.querySelector('.cost') as HTMLInputElement).value)}
@@ -286,10 +356,10 @@ async function refreshSaleModifyInputs(): Promise<void> {
 	// Show modify section
 	document.getElementById('section_modify').style.display = 'block';
 
-	let saleEntry = (await main.querySQL(`SELECT * FROM SALE WHERE id_sale = ${aux.id};`)).rows[0];
+	let saleEntry = (await main.querySQL(`SELECT * FROM SALE WHERE id_sale = ${main.aux.id};`)).rows[0];
 
 	// Set ID Sale
-	(document.getElementById('idSale') as HTMLSpanElement).innerHTML = `ID Venta: ${aux.id}`;
+	(document.getElementById('idSale') as HTMLSpanElement).innerHTML = `ID Venta: ${main.aux.id}`;
 
 	// Set ID Employee
 	(document.getElementById('idEmployee') as HTMLInputElement).value = `${saleEntry.fk_employee}`;
@@ -297,8 +367,22 @@ async function refreshSaleModifyInputs(): Promise<void> {
 	// Select employee button
 	(document.getElementById('buttonEmployee') as HTMLButtonElement).addEventListener('click', async (): Promise<void> => {
 
-		main.setGlobal({...aux, selectEntryColumn: 'employee', returnInput: `document.getElementById('idEmployee')`}, 'aux');
-		main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
+		main.setProperty({...main.aux, column: 'employee', canSelect: true}, 'aux');
+		let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+		let code: string =
+		`
+		try
+		{
+			const remote_1 = require("@electron/remote");
+			const main = (0, remote_1.getGlobal)('main');
+			document.getElementById('idEmployee').value = main.aux.return.id_employee;
+			document.getElementById('label_idEmployee').innerHTML = main.aux.return.first_name + ', ID:';
+			document.getElementById('localAux').dataset.validEmployee = '1';
+		}
+		catch (error) {}
+		`;
+		queryWindow.setVar(code, 'codeCloseParent');
+
 	});
 
 	// Set Date
@@ -310,29 +394,61 @@ async function refreshSaleModifyInputs(): Promise<void> {
 		document.removeChild(detailCointainer.firstChild);
 
 	// Sale details
-	let saleDetailEntry = (await main.querySQL(`SELECT * FROM SALE_DETAIL WHERE fk_sale = ${aux.id};`)).rows;
+	let saleDetailEntry = (await main.querySQL(`SELECT * FROM SALE_DETAIL WHERE fk_sale = ${main.aux.id};`)).rows;
 
 	auxIDDetail = 0;
 	for (let i = 0; i < saleDetailEntry.length; i++) {
 		
-		addNewSaleDetail(saleDetailEntry[i].fk_product, saleDetailEntry[i].amount, saleDetailEntry[i].cost, auxIDDetail);
+		await addNewSaleDetail(saleDetailEntry[i].fk_product, saleDetailEntry[i].amount, saleDetailEntry[i].cost, auxIDDetail);
 		auxIDDetail += 1;
 	}
 }
 
-function addNewSaleDetail(id: number, amount: number, cost: number, elementId: number): void {
+async function addNewSaleDetail(id: number, amount: number, cost: number, elementId: number): Promise<void> {
 
 
 	let detail: HTMLDivElement = document.importNode(templateDetail, true);
 	detail.id = `detail_${elementId}`;
 
 	(detail.querySelector('.idProduct') as HTMLInputElement).value = `${id}`;
+	(detail.querySelector('.idProduct') as HTMLInputElement).addEventListener('change', async (): Promise<void> => {
+
+		try {
+			let data = (await main.querySQL(`SELECT NAME, ID_PRODUCT FROM PRODUCT WHERE ID_PRODUCT = ${(detail.querySelector('.idProduct') as HTMLInputElement).value} AND NOT ID_PRODUCT = 0;`)).rows[0];
+			document.getElementById(`detail_${elementId}`).querySelector('.product_info').innerHTML = data.name;
+			document.getElementById(`detail_${elementId}`).dataset.valid = '1';
+		}
+		catch (error: any){
+			document.getElementById(`detail_${elementId}`).querySelector('.product_info').innerHTML = 'Producto no encontrado';
+			document.getElementById(`detail_${elementId}`).dataset.valid = '0';
+		}
+	});
+
+	if (id != 0)
+	{
+		let productInfo = (await main.querySQL(`SELECT NAME, ID_PRODUCT FROM PRODUCT WHERE ID_PRODUCT = ${id} AND NOT ID_PRODUCT = 0;`)).rows[0];
+		detail.querySelector('.product_info').innerHTML = productInfo.name;
+	}
+
 	(detail.querySelector('.amount') as HTMLInputElement).value = `${amount}`;
 	(detail.querySelector('.cost') as HTMLInputElement).value = `${cost}`;
 	(detail.querySelector('.buttonProduct') as HTMLButtonElement).addEventListener('click', (): void => {
 
-		main.setGlobal({...aux, selectEntryColumn: 'product', returnInput: `document.getElementById('detail_${elementId}').querySelector('.idProduct')`}, 'aux');
-		main.createWindow(800, 600, 'gui/select_entry.html', getCurrentWindow());
+		main.setProperty({...main.aux, column: 'product', canSelect: true}, 'aux');
+		let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+		let code: string =
+		`
+		try
+		{
+			const remote_1 = require("@electron/remote");
+			const main = (0, remote_1.getGlobal)('main');
+			document.getElementById('detail_${elementId}').querySelector('.idProduct').value = main.aux.return.id_product;
+			document.getElementById('detail_${elementId}').querySelector('.product_info').innerHTML = main.aux.return.name;
+			document.getElementById('detail_${elementId}').dataset.valid = '1';
+		}
+		catch (error) {}
+		`;
+		queryWindow.setVar(code, 'codeCloseParent');
 
 	});
 
