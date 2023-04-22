@@ -9,21 +9,26 @@
 
 		
 		<div id="container">
-			<img src="../../res/logo.svg" alt="">
+			<img id="zoo_logo" src="../../res/logo.svg" alt="">
 
-			<button id="button_sale" type="button">Ventas</button>
+			<div class="main_option_buttons">
+				<button id="button_sale" type="button"><img src="../../res/menu_icons/sale.svg">Ventas</button>
+				<button id="button_order" type="button"><img src="../../res/menu_icons/order.svg">Pedidos</button>
+				<button id="button_purchase" type="button"><img src="../../res/menu_icons/purchase.svg">Compras</button>
+				<button id="button_return" type="button"><img src="../../res/menu_icons/return.svg">Devoluciones</button>
+				<button id="button_employee" type="button"><img src="../../res/menu_icons/employee.svg">Empleados</button>
+				<button id="button_product" type="button"><img src="../../res/menu_icons/product.svg">Productos</button>
+				<button id="button_store" type="button" data-valid="0"><img src="../../res/menu_icons/store.svg">Locales</button>
+			</div>
+			
 			<div class="section_menu" id="section_sale" data-valid="0"></div>
 
-			<button id="button_order" type="button">Pedidos</button>
 			<div class="section_menu" id="section_order" data-valid="0"></div>
 
-			<button id="button_purchase" type="button">Compras</button>
 			<div class="section_menu" id="section_purchase" data-valid="0"></div>
 
-			<button id="button_return" type="button">Devoluciones</button>
 			<div class="section_menu" id="section_return" data-valid="0"></div>
 
-			<button id="button_employee" type="button">Empleados</button>
 			<div class="section_menu" id="section_employee" data-valid="0">
 
 				<div>
@@ -40,7 +45,6 @@
 				</div>
 			</div>
 
-			<button id="button_product" type="button">Productos</button>
 			<div class="section_menu" id="section_product" data-valid="0">
 				<div>
 					<button id="button_add_product" type="button">Registrar producto</button>
@@ -56,7 +60,6 @@
 				</div>
 			</div>
 
-			<button id="button_store" type="button" data-valid="0">Locales</button>
 			<div class="section_menu" id="section_store" data-valid="0">
 
 				<div>
