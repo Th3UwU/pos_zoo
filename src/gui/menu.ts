@@ -39,6 +39,13 @@ button_employee.addEventListener('click', (): void => {hideSubmenus(); section_e
 button_product.addEventListener('click', (): void => {hideSubmenus(); section_product.style.display = 'block';});
 button_store.addEventListener('click', (): void => {hideSubmenus(); section_store.style.display = 'block';});
 
+/***** Order *****/
+let button_add_order = document.getElementById('button_add_order') as HTMLButtonElement;
+button_add_order.addEventListener('click', (): void => {
+	main.setProperty({action: 'a', id: '-1'}, 'aux');
+	main.createWindow(800, 600, 'gui/am_order.html', getCurrentWindow());
+});
+
 /***** Employee *****/
 let employee = document.getElementById('employee') as HTMLInputElement;
 let label_employee = document.getElementById('label_employee') as HTMLLabelElement;

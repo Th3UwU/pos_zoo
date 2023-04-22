@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<title>Iniciar sesión</title>
+		<link rel="stylesheet" href="./am_order.css" type="text/css">
+	</head>
+	<body>
+		<span id="localAux" style="display: none;" data-valid-product="0"></span>
+
+		<div id="container">
+
+			<label id="label_idProduct" for="idProduct">ID: </label>
+			<input id="idProduct" type="text"></input>
+			<button id="buttonSelectProduct" type="button">Seleccionar</button>
+			<button id="buttonAddProduct" type="button">Agregar</button>
+
+			<div id="product_list">
+
+				<template id="templateProduct">
+					<div class="product" data-id-product="0">
+						<span class="productId"></span>
+						<span class="name"></span>
+						<span class="stock"></span>
+						<span class="local_stock"></span>
+						<label><input class="amount" type="number" min="1" value="1"></label>
+						<button class="buttonDelete" type="button">Eliminar</button>
+					</div>
+				</template>
+
+				<button id="buttonAccept">Confirmar pedido</button>
+				<button id="buttonCancel">Cancelar</button>
+
+			</div>
+
+		</div>
+	</body>
+	<script style="display: none;">
+		require("./am_order.js")
+	</script>
+</html>
