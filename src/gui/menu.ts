@@ -57,7 +57,7 @@ order.addEventListener('change', async (): Promise<void> => {
 		if (data[0].status == 'e')
 			throw "No puede editar un pedido ya entregado";
 
-		label_order.innerHTML =  `Local: ${data[0].fk_store}` + (data[0].date as Date).toISOString().substring(0, 10) + ', ID:';
+		label_order.innerHTML =  `Local: ${data[0].fk_store}, ` + (data[0].date as Date).toISOString().substring(0, 10) + ', ID:';
 		section_order.dataset.valid = '1';
 	}
 	catch (error: any){
