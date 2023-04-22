@@ -3,7 +3,6 @@ import { QueryResult } from 'pg';
 import Main from '../main';
 
 let main: Main = getGlobal('main');
-let aux: any = getGlobal('aux');
 
 const types: string[] = [
 	'cafeteria',
@@ -13,6 +12,7 @@ const types: string[] = [
 	'bebidas'
 ];
 
+let id_store = document.getElementById('id_store') as HTMLInputElement;
 let location = document.getElementById('location') as HTMLInputElement;
 let type = document.getElementById('type') as HTMLSelectElement;
 let hours = document.getElementById('hours') as HTMLInputElement;
@@ -36,14 +36,20 @@ for (const t of types) {
 
 async function MAIN(): Promise<void> {
 
+	id_store.readOnly = true;
+
 	// Add new store
-	if (aux.action == 'a')
+	if (main.aux.action == 'a')
 	{
+		let new_id: number = (await main.querySQL(`SELECT MAX(ID_STORE) FROM STORE`)).rows[0].max;
+		new_id++;
+		id_store.value = `${new_id}`;
+		status.disabled = true;
 		
 		buttonAccept.addEventListener('click', async (): Promise<void> => {
 		
 			try {
-				let query = `INSERT INTO STORE VALUES((SELECT MAX(ID_STORE) FROM STORE) + 1, '${location.value}', '${type.value}', '${hours.value}', DEFAULT);`;
+				let query = `INSERT INTO STORE VALUES(${new_id}, '${location.value}', '${type.value}', '${hours.value}', DEFAULT);`;
 				console.log(query);
 				await main.querySQL(query);
 
@@ -58,12 +64,13 @@ async function MAIN(): Promise<void> {
 		});
 	}
 	// Modify store
-	else if (aux.action == 'm')
+	else if (main.aux.action == 'm')
 	{
 		// Get entry to modify
-		let store: any = (await main.querySQL(`SELECT * FROM STORE WHERE id_store = ${aux.id};`)).rows[0];
+		let store: any = (await main.querySQL(`SELECT * FROM STORE WHERE id_store = ${main.aux.id};`)).rows[0];
 
 		// Populate inputs with existing info
+		id_store.value = store.id_store;
 		location.value = store.location;
 
 		for (let i = 0; i < types.length; i++)
@@ -80,7 +87,7 @@ async function MAIN(): Promise<void> {
 				`UPDATE STORE SET
 				location = '${location.value}', type = '${type.value}',
 				hours = '${hours.value}', status = ${status.checked}
-				WHERE id_store = ${aux.id};`;
+				WHERE id_store = ${main.aux.id};`;
 
 				console.log(query);
 				await main.querySQL(query);
