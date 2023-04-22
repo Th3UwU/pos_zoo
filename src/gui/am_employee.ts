@@ -4,7 +4,6 @@ import { readFileSync } from 'fs';
 import Main from '../main';
 
 let main: Main = getGlobal('main');
-let aux: any = getGlobal('aux');
 
 // Select CV
 const dialogOpenOptions: OpenDialogOptions = {title: 'Elegir CV', properties: ['openFile']};
@@ -60,7 +59,7 @@ async function MAIN(): Promise<void> {
 	id_employee.readOnly = true;
 	
 	// Add new employee
-	if (aux.action == 'a')
+	if (main.aux.action == 'a')
 	{
 		// Get 'new id'
 		let new_id: number = (await main.querySQL(`SELECT MAX(ID_EMPLOYEE) FROM EMPLOYEE`)).rows[0].max;
@@ -98,7 +97,7 @@ async function MAIN(): Promise<void> {
 		buttonCVPreview.addEventListener('click', (): void => {
 
 			if (CVPath.value != "") {
-				let newAux = {...aux, url: CVPath.value};
+				let newAux = {...main.aux, url: CVPath.value};
 				main.setGlobal(newAux, 'aux');
 				main.createWindow(800, 600, 'gui/pdf_viewer.html', getCurrentWindow());
 			}
@@ -108,10 +107,10 @@ async function MAIN(): Promise<void> {
 		});
 	}
 	// Modify employee
-	else if (aux.action == 'm')
+	else if (main.aux.action == 'm')
 	{
 		// Get entry to modify
-		let employee: any = (await main.querySQL(`SELECT * FROM EMPLOYEE WHERE id_employee = ${aux.id};`)).rows[0];
+		let employee: any = (await main.querySQL(`SELECT * FROM EMPLOYEE WHERE id_employee = ${main.aux.id};`)).rows[0];
 
 		// Populate inputs with existing info
 		id_employee.value = employee.id_employee;
@@ -129,14 +128,14 @@ async function MAIN(): Promise<void> {
 		buttonCVPreview.addEventListener('click', (): void => {
 
 			if (CVPath.value != "") {
-				let newAux = {...aux, url: CVPath.value};
+				let newAux = {...main.aux, url: CVPath.value};
 				main.setGlobal(newAux, 'aux');
 				main.createWindow(800, 600, 'gui/pdf_viewer.html', getCurrentWindow());
 			}
 			else if (employee.cv) {
 				let pdfFileUrl = URL.createObjectURL(new Blob([employee.cv.buffer], {type: 'application/pdf'}));
 
-				let newAux = {...aux, url: pdfFileUrl};
+				let newAux = {...main.aux, url: pdfFileUrl};
 				main.setGlobal(newAux, 'aux');
 				main.createWindow(800, 600, 'gui/pdf_viewer.html', getCurrentWindow());
 			}
@@ -160,7 +159,7 @@ async function MAIN(): Promise<void> {
 				pass = '${pass.value}', curp = '${curp.value}', first_name = '${firstName.value}',
 				last_name = '${lastName.value}', address = '${address.value}', nss = '${nss.value}',
 				role = '${role.value}', status = '${status.checked}'`
-				+ ((CVRaw) ? (`, cv = (DECODE('${CVRaw}', 'base64')) WHERE id_employee = ${aux.id};`) : (` WHERE id_employee = ${aux.id};`));
+				+ ((CVRaw) ? (`, cv = (DECODE('${CVRaw}', 'base64')) WHERE id_employee = ${main.aux.id};`) : (` WHERE id_employee = ${main.aux.id};`));
 
 				console.log(query);
 				await main.querySQL(query);
