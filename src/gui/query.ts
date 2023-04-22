@@ -27,6 +27,16 @@ switch (main.aux.column) {
 		visibleColumns = ['id_employee', 'first_name', 'last_name', 'role'];
 		matchRow = 'first_name';
 		break;
+
+	case "product_order":
+		visibleColumns = ['id_product_order', 'date', 'fk_store', 'fk_employee'];
+		matchRow = null;
+		break;
+
+	case "product_order_p":
+		visibleColumns = ['id_product_order', 'date', 'fk_store', 'fk_employee'];
+		matchRow = null;
+		break;
 };
 
 let search_bar = document.getElementById('search_bar') as HTMLInputElement;
@@ -52,6 +62,32 @@ async function search(): Promise<void>
 
 	switch (main.aux.column)
 	{
+
+	case "product_order_p":
+		if (isNumber)
+		{
+			query = `SELECT * FROM product_order WHERE `
+			+ `id_product_order = ${parseInt(search_bar.value)}`
+			+ ` AND NOT id_product_order = 0 AND STATUS = 'p';`;
+		}
+		else
+		{
+			query = `SELECT * FROM product_order WHERE STATUS = 'p';`;
+		}
+		break;
+
+	case "product_order":
+		if (isNumber)
+		{
+			query = `SELECT * FROM ${main.aux.column} WHERE `
+			+ `id_${main.aux.column} = ${parseInt(search_bar.value)}`
+			+ ` AND NOT id_${main.aux.column} = 0;`;
+		}
+		else
+		{
+			query = `SELECT * FROM ${main.aux.column};`;
+		}
+		break;
 
 	default:
 		query = `SELECT * FROM ${main.aux.column} WHERE ` +

@@ -40,11 +40,85 @@ button_product.addEventListener('click', (): void => {hideSubmenus(); section_pr
 button_store.addEventListener('click', (): void => {hideSubmenus(); section_store.style.display = 'block';});
 
 /***** Order *****/
+let order = document.getElementById('order') as HTMLInputElement;
+let label_order = document.getElementById('label_order') as HTMLLabelElement;
+
+order.addEventListener('change', async (): Promise<void> => {
+
+	try {
+		let data = (await main.querySQL(`SELECT DATE, FK_STORE, STATUS FROM PRODUCT_ORDER WHERE ID_PRODUCT_ORDER = ${order.value} AND NOT ID_PRODUCT_ORDER = 0;`)).rows;
+
+		if (data.length == 0)
+			throw "Pedido no encontrado";
+
+		if (data[0].status == 'c')
+			throw "No puede editar un pedido cancelado";
+
+		if (data[0].status == 'e')
+			throw "No puede editar un pedido ya entregado";
+
+		label_order.innerHTML =  `Local: ${data[0].fk_store}` + (data[0].date as Date).toISOString().substring(0, 10) + ', ID:';
+		section_order.dataset.valid = '1';
+	}
+	catch (error: any){
+		label_order.innerHTML = error;
+		section_order.dataset.valid = '0';
+	}
+});
+
 let button_add_order = document.getElementById('button_add_order') as HTMLButtonElement;
 button_add_order.addEventListener('click', (): void => {
 	main.setProperty({action: 'a', id: '-1'}, 'aux');
 	main.createWindow(800, 600, 'gui/am_order.html', getCurrentWindow());
 });
+
+let button_modify_order = document.getElementById('button_modify_order') as HTMLButtonElement;
+button_modify_order.addEventListener('click', (): void => {
+
+	try {
+		if (section_order.dataset.valid == '0')
+			throw {message: "El pedido seleccionado no es válido"};
+
+		main.setProperty({action: 'm', id: order.value}, 'aux');
+		main.createWindow(800, 600, 'gui/am_order.html', getCurrentWindow());
+	}
+	catch (error: any) {
+		console.log(error);
+		dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+	}
+});
+
+let button_select_order = document.getElementById('button_select_order') as HTMLButtonElement;
+button_select_order.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, column: 'product_order_p', canSelect: true}, 'aux');
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+	let code: string =
+	`
+	try
+	{
+		const remote_1 = require("@electron/remote");
+		const main = (0, remote_1.getGlobal)('main');
+		document.getElementById('order').value = main.aux.return.id_product_order;
+		document.getElementById('label_order').innerHTML = 'Local: ' + main.aux.return.fk_store + ', ' + main.aux.return.date.toISOString().substring(0, 10) + ', ID:';
+		document.getElementById('section_order').dataset.valid = '1';
+	}
+	catch (error) {}
+	`;
+	queryWindow.setVar(code, 'codeCloseParent');
+});
+
+let button_query_order_p = document.getElementById('button_query_order_p') as HTMLButtonElement;
+button_query_order_p.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, column: 'product_order_p', canSelect: false}, 'aux');
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+});
+
+let button_query_order = document.getElementById('button_query_order') as HTMLButtonElement;
+button_query_order.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, column: 'product_order', canSelect: false}, 'aux');
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+});
+
 
 /***** Employee *****/
 let employee = document.getElementById('employee') as HTMLInputElement;

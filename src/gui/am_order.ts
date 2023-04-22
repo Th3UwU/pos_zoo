@@ -68,21 +68,7 @@ buttonAddProduct.addEventListener('click', async (): Promise<void> =>
 			amount.value = (parseInt(amount.value) + 1).toString();
 		}
 		else
-		{
-			let productInfo = (await main.querySQL(`SELECT * FROM PRODUCT WHERE ID_PRODUCT = ${idProduct.value}`)).rows[0];
-			let productInstance = document.importNode(templateProduct, true);
-			
-			productInstance.dataset.idProduct = `${productInfo.id_product}`;
-			productInstance.querySelector('.productId').innerHTML = `ID: ${productInfo.id_product}`;
-			productInstance.querySelector('.name').innerHTML = `Nombre: ${productInfo.name}`;
-			productInstance.querySelector('.stock').innerHTML = `Stock: ${productInfo.stock}`;
-			productInstance.querySelector('.local_stock').innerHTML = `Limite local: ${productInfo.local_limit}`;
-			productInstance.querySelector('.buttonDelete').addEventListener('click', (event: any): void => {
-				event.target.parentElement.remove()
-			});
-	
-			product_list.appendChild(productInstance);
-		}
+			addDetail(parseInt(idProduct.value), 1);
 
 
 	} catch (error: any) {
@@ -141,7 +127,7 @@ async function MAIN(): Promise<void>
 					
 					// Comprobar
 					if ((currentLocalStock + desiredAmount) > parseInt(productInfo.local_limit))
-						throw {message: `La cantidad seleccionada de '${productInfo.name}' excede el stock local!!`};
+						throw {message: `La cantidad seleccionada de '${productInfo.name}' excede el limite de stock por local!!`};
 
 					if (desiredAmount > parseInt(productInfo.stock))
 						throw {message: `El almacén no cuenta con suficiente stock de '${productInfo.name}'!!`};
@@ -166,3 +152,21 @@ async function MAIN(): Promise<void>
 	}
 }
 MAIN();
+
+async function addDetail(idp: number, amount: number): Promise<void>
+{
+	let productInfo = (await main.querySQL(`SELECT * FROM PRODUCT WHERE ID_PRODUCT = ${idp}`)).rows[0];
+	let productInstance = document.importNode(templateProduct, true);
+	
+	productInstance.dataset.idProduct = `${productInfo.id_product}`;
+	productInstance.querySelector('.productId').innerHTML = `ID: ${productInfo.id_product}`;
+	productInstance.querySelector('.name').innerHTML = `Nombre: ${productInfo.name}`;
+	productInstance.querySelector('.stock').innerHTML = `Stock: ${productInfo.stock}`;
+	productInstance.querySelector('.local_stock').innerHTML = `Limite local: ${productInfo.local_limit}`;
+	(productInstance.querySelector('.amount') as HTMLInputElement).value = `${amount}`;
+	productInstance.querySelector('.buttonDelete').addEventListener('click', (event: any): void => {
+		event.target.parentElement.remove()
+	});
+
+	product_list.appendChild(productInstance);
+}
