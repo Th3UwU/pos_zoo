@@ -18,13 +18,37 @@ let select_product_button = (document.getElementById('select_product_button') as
 let select_add_product_button = (document.getElementById('select_add_product_button') as HTMLButtonElement);
 
 let id_purchase = (document.getElementById('id_purchase') as HTMLInputElement);
+let selected_supplier = (document.getElementById('selected_supplier') as HTMLInputElement);
+let status = document.getElementById('status') as HTMLSelectElement;
 
 async function MAIN(): Promise<void>
 {
 	id_purchase.readOnly = true;
+	selected_supplier.readOnly = true;
+
+	// Status select
+	let option_p = document.createElement('option') as HTMLOptionElement;
+	option_p.value = 'p';
+	option_p.text = 'pendiente';
+	status.add(option_p);
+
+	let option_e = document.createElement('option') as HTMLOptionElement;
+	option_e.value = 'e';
+	option_e.text = 'entregado';
+	status.add(option_e);
+
+	let option_c = document.createElement('option') as HTMLOptionElement;
+	option_c.value = 'c';
+	option_c.text = 'cancelado';
+	status.add(option_c);
+
+	status.selectedIndex = 0;
+	///////////////////
 
 	if (main.aux.action == 'a')
 	{
+		status.disabled = true;
+
 		// Append suppliers
 		section_select_supplier.style.display = 'block';
 		section_select_products.style.display = 'none';
@@ -43,6 +67,8 @@ async function MAIN(): Promise<void>
 					section_select_supplier.dataset.idSupplier = supplier_selection.dataset.id;
 					section_select_supplier.style.display = 'none';
 					section_select_products.style.display = 'block';
+
+					selected_supplier.value = `${s.name}`;
 				});
 
 			section_select_supplier.appendChild(supplier_selection);
