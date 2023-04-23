@@ -27,6 +27,13 @@ async function MAIN(): Promise<void> {
 	// Add new sale
 	if (main.aux.action == 'a')
 	{
+		let idSale: number = (await main.querySQL(`SELECT MAX(ID_SALE) FROM SALE;`)).rows[0].max;
+		idSale++;
+
+		let idNewSale = document.getElementById('idNewSale') as HTMLInputElement;
+		idNewSale.value = `${idSale}`;
+		idNewSale.readOnly = true;
+
 		// Show product section
 		document.getElementById('section_product').style.display = 'block';
 
@@ -134,17 +141,33 @@ async function MAIN(): Promise<void> {
 		// Accept button1 (section_product -> section_total)
 		buttonAccept1.addEventListener('click', async (): Promise<void> => {
 
-			// Get shopping cart
-			let addedProducts = document.getElementsByClassName('product') as HTMLCollectionOf<HTMLDivElement>;
-			if (addedProducts.length == 0)
+
+			if ((document.getElementsByClassName('product') as HTMLCollectionOf<HTMLDivElement>).length == 0)
 			{
 				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: "Debe seleccionar almenos 1 producto", type: "error"});
 				return;
 			}
 
-			for (const p of addedProducts) {
-
+			// Get shopping cart
+			shoppingCart = [];
+			let addedProducts = document.getElementsByClassName('product') as HTMLCollectionOf<HTMLDivElement>;
+			for (const p of addedProducts)
 				shoppingCart.push({idProduct: parseInt(p.querySelector('.productId').innerHTML), amount: parseInt((p.querySelector('.amount') as HTMLInputElement).value)});
+			
+			// Validar stock / local_stock
+			for (const i of shoppingCart)
+			{
+				let local_stock: number = 0;
+				let temp: any[] = (await main.querySQL(`SELECT * FROM STORE_PRODUCT WHERE FK_STORE = ${main.credentials.idStore} AND FK_PRODUCT = ${i.idProduct};`)).rows;
+				if (temp.length != 0)
+					local_stock = temp[0].local_stock;
+
+				if ((local_stock - i.amount) < 0)
+				{
+					let productname: string = (await main.querySQL(`SELECT NAME FROM PRODUCT WHERE ID_PRODUCT = ${i.idProduct};`)).rows[0].name;
+					dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: `No existe stock suficiente del producto '${productname}'`, type: "error"});
+					return;
+				}
 			}
 
 			// Change section
@@ -185,8 +208,6 @@ async function MAIN(): Promise<void> {
 		buttonAccept2.addEventListener('click', async (): Promise<void> => {
 
 			// Register on DB!!
-			let idSale: number = (await main.querySQL(`SELECT MAX(ID_SALE) FROM SALE;`)).rows[0].max;
-			idSale++;
 
 			//// SALE HEADER ////
 			let query: string = `INSERT INTO SALE VALUES(${idSale}, ${main.credentials.idEmployee}, DEFAULT);`;
@@ -200,6 +221,20 @@ async function MAIN(): Promise<void> {
 				query = `INSERT INTO SALE_DETAIL VALUES((SELECT MAX(ID_SALE_DETAIL) FROM SALE_DETAIL) + 1, ${idSale}, ${p.idProduct}, ${p.amount}, ${productEntry.price});`;
 				console.log(query);
 				main.querySQL(query);
+
+				// Decrease local stock
+				let currentLocalStock: number = (await main.querySQL(`SELECT * FROM STORE_PRODUCT WHERE FK_STORE = ${main.credentials.idStore} AND FK_PRODUCT = ${p.idProduct};`)).rows[0].local_stock;
+				if ((currentLocalStock - p.amount) == 0)
+				{
+					query = `DELETE FROM STORE_PRODUCT WHERE FK_STORE = ${main.credentials.idStore} AND FK_PRODUCT = ${p.idProduct};`;
+				}
+				else
+				{
+					query = `UPDATE STORE_PRODUCT SET LOCAL_STOCK = ${(currentLocalStock - p.amount)} WHERE FK_STORE = ${main.credentials.idStore} AND FK_PRODUCT = ${p.idProduct};`;
+				}
+				console.log(query);
+				main.querySQL(query);
+
 			}
 
 			// Change section
