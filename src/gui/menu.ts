@@ -13,6 +13,7 @@ let section_return = document.getElementById('section_return') as HTMLDivElement
 let section_employee = document.getElementById('section_employee') as HTMLDivElement;
 let section_product = document.getElementById('section_product') as HTMLDivElement;
 let section_store = document.getElementById('section_store') as HTMLDivElement;
+let section_supplier = document.getElementById('section_supplier') as HTMLDivElement;
 
 let button_sale = document.getElementById('button_sale') as HTMLButtonElement;
 let button_order = document.getElementById('button_order') as HTMLButtonElement;
@@ -21,6 +22,7 @@ let button_return = document.getElementById('button_return') as HTMLButtonElemen
 let button_employee = document.getElementById('button_employee') as HTMLButtonElement;
 let button_product = document.getElementById('button_product') as HTMLButtonElement;
 let button_store = document.getElementById('button_store') as HTMLButtonElement;
+let button_supplier = document.getElementById('button_supplier') as HTMLButtonElement;
 
 let section_menu = document.getElementsByClassName('section_menu') as HTMLCollectionOf<HTMLDivElement>;
 // Hide all sub-menus
@@ -38,6 +40,7 @@ button_return.addEventListener('click', (): void => {hideSubmenus(); section_ret
 button_employee.addEventListener('click', (): void => {hideSubmenus(); section_employee.style.display = 'block';});
 button_product.addEventListener('click', (): void => {hideSubmenus(); section_product.style.display = 'block';});
 button_store.addEventListener('click', (): void => {hideSubmenus(); section_store.style.display = 'block';});
+button_supplier.addEventListener('click', (): void => {hideSubmenus(); section_supplier.style.display = 'block';});
 
 /***** Sale *****/
 let sale = document.getElementById('sale') as HTMLInputElement;
@@ -182,6 +185,13 @@ let button_query_order = document.getElementById('button_query_order') as HTMLBu
 button_query_order.addEventListener('click', (): void => {
 	main.setProperty({...main.aux, column: 'product_order', canSelect: false}, 'aux');
 	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+});
+
+/***** Purchase *****/
+let button_add_purchase = document.getElementById('button_add_purchase') as HTMLButtonElement;
+button_add_purchase.addEventListener('click', (): void => {
+	main.setProperty({action: 'a', id: '-1'}, 'aux');
+	main.createWindow(800, 600, 'gui/am_purchase.html', getCurrentWindow());
 });
 
 

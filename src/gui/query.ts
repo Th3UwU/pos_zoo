@@ -23,6 +23,11 @@ switch (main.aux.column) {
 		matchRow = 'name';
 		break;
 
+	case "product_supplier":
+		visibleColumns = ['id_product', 'name', 'price', 'image'];
+		matchRow = 'name';
+		break;
+
 	case "employee":
 		visibleColumns = ['id_employee', 'first_name', 'last_name', 'role'];
 		matchRow = 'first_name';
@@ -105,6 +110,12 @@ async function search(): Promise<void>
 		{
 			query = `SELECT * FROM sale;`;
 		}
+		break;
+
+	case "product_supplier":
+		query = `SELECT * FROM PRODUCT WHERE ` +
+		((isNumber) ? (`ID_PRODUCT = ${parseInt(search_bar.value)};`) : (`LOWER(${matchRow}) LIKE LOWER('%${search_bar.value}%')`))
+		+ ` AND NOT ID_PRODUCT = 0 AND FK_SUPPLIER = ${parseInt(main.aux.supplier_id)};`;
 		break;
 		
 	default:

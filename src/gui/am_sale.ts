@@ -463,6 +463,7 @@ async function addNewSaleDetail(id: number, amount: number, cost: number, elemen
 	{
 		let productInfo = (await main.querySQL(`SELECT NAME, ID_PRODUCT FROM PRODUCT WHERE ID_PRODUCT = ${id} AND NOT ID_PRODUCT = 0;`)).rows[0];
 		detail.querySelector('.product_info').innerHTML = productInfo.name;
+		detail.dataset.valid = '1';
 	}
 
 	(detail.querySelector('.amount') as HTMLInputElement).value = `${amount}`;

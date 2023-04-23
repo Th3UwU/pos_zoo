@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<title>Compra</title>
+		<link rel="stylesheet" href="./am_purchase.css" type="text/css">
+	</head>
+	<body>
+
+		<template id="template_supplier_selection">
+			<div class="supplier_selection" data-id="0">
+				<button>
+					<span class="supplier_name"></span>
+					<img src="">
+				</button>
+			</div>
+		</template>
+
+		<template id="template_product_item">
+			<div class="product_item" data-id="0">
+				<span class="id"></span>
+				<span class="name"></span>
+				<label>Cantidad<input class="amount" type="number" min="1" value="1"></label>
+				<label>Costo<input class="cost" type="number" min="0" value="0"></label>
+				<button class="remove" type="button">Eliminar</button>
+			</div>
+		</template>
+
+		<div id="container">
+
+			<div id="section_select_supplier" data-id-supplier="0"></div>
+			<div id="section_select_products">
+				<label for="id_purchase">ID Compra</label>
+				<input id="id_purchase" type="number">
+
+				<label for="select_product_id">ID Producto</label>
+				<input id="select_product_id" type="text" data-valid="0"></input>
+				<span id="select_product_name"></span>
+				<button id="select_product_button" type="button">Seleccionar producto</button>
+				<button id="select_add_product_button" type="button">Agregar</button>
+
+				<div id="product_item_list"></div>
+
+			</div>
+
+		</div>
+	</body>
+	<script style="display: none;">
+		require("./am_purchase.js")
+	</script>
+</html>
