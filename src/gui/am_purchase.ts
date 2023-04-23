@@ -52,6 +52,61 @@ async function MAIN(): Promise<void>
 		getCurrentWindow().close();
 	});
 
+	// Product ID input
+	select_product_id.addEventListener('change', async (): Promise<void> => {
+
+		try {
+			let data = (await main.querySQL(`SELECT * FROM PRODUCT WHERE ID_PRODUCT = ${select_product_id.value} AND NOT ID_PRODUCT = 0;`)).rows;
+			if (data.length == 0)
+			{
+				select_product_id.dataset.valid = '0';
+				throw "Producto no encontrado";
+			}
+
+			select_product_id.dataset.valid = '1';
+			if (parseInt(data[0].fk_supplier) != parseInt(section_select_supplier.dataset.idSupplier))
+				throw "El proveedor no coincide";
+
+			select_product_name.innerHTML = `Nombre: ${data[0].name}`;
+		}
+		catch (error: any){
+			select_product_name.innerHTML = error;
+		}
+	});
+
+	// Product selection button
+	select_product_button.addEventListener('click', (): void => {
+
+		main.setProperty({...main.aux, column: 'product_supplier', canSelect: true, supplier_id: parseInt(section_select_supplier.dataset.idSupplier)}, 'aux');
+		let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+		let code: string =
+		`
+		try
+		{
+			const remote_1 = require("@electron/remote");
+			const main = (0, remote_1.getGlobal)('main');
+			document.getElementById('select_product_id').value = main.aux.return.id_product;
+			document.getElementById('select_product_name').innerHTML = 'Nombre: ' + main.aux.return.name;
+			document.getElementById('select_product_id').dataset.valid = '1';
+		}
+		catch (error) {}
+		`;
+		queryWindow.setVar(code, 'codeCloseParent');
+
+	});
+
+	// Add product item button
+	select_add_product_button.addEventListener('click', async (): Promise<void> => {
+		
+		if (select_product_id.dataset.valid == '0')
+		{
+			dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: "Producto inválido", type: "error"});
+			return;
+		}
+
+		await addProductItem(parseInt(select_product_id.value), 1, 0);
+	});
+
 	if (main.aux.action == 'a')
 	{
 		status.disabled = true;
@@ -86,61 +141,6 @@ async function MAIN(): Promise<void>
 		new_id++;
 
 		id_purchase.value = `${new_id}`;
-
-		// Product ID input
-		select_product_id.addEventListener('change', async (): Promise<void> => {
-
-			try {
-				let data = (await main.querySQL(`SELECT * FROM PRODUCT WHERE ID_PRODUCT = ${select_product_id.value} AND NOT ID_PRODUCT = 0;`)).rows;
-				if (data.length == 0)
-				{
-					select_product_id.dataset.valid = '0';
-					throw "Producto no encontrado";
-				}
-
-				select_product_id.dataset.valid = '1';
-				if (parseInt(data[0].fk_supplier) != parseInt(section_select_supplier.dataset.idSupplier))
-					throw "El proveedor no coincide";
-
-				select_product_name.innerHTML = `Nombre: ${data[0].name}`;
-			}
-			catch (error: any){
-				select_product_name.innerHTML = error;
-			}
-		});
-
-		// Product selection button
-		select_product_button.addEventListener('click', (): void => {
-
-			main.setProperty({...main.aux, column: 'product_supplier', canSelect: true, supplier_id: parseInt(section_select_supplier.dataset.idSupplier)}, 'aux');
-			let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
-			let code: string =
-			`
-			try
-			{
-				const remote_1 = require("@electron/remote");
-				const main = (0, remote_1.getGlobal)('main');
-				document.getElementById('select_product_id').value = main.aux.return.id_product;
-				document.getElementById('select_product_name').innerHTML = 'Nombre: ' + main.aux.return.name;
-				document.getElementById('select_product_id').dataset.validProduct = '1';
-			}
-			catch (error) {}
-			`;
-			queryWindow.setVar(code, 'codeCloseParent');
-
-		});
-
-		// Add product item button
-		select_add_product_button.addEventListener('click', async (): Promise<void> => {
-			
-			if (select_product_id.dataset.valid == '0')
-			{
-				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: "Producto inválido", type: "error"});
-				return;
-			}
-
-			await addProductItem(parseInt(select_product_id.value), 1, 0);
-		});
 
 		// Accept button
 		button_accept.addEventListener('click', async (): Promise<void> => {
@@ -194,6 +194,17 @@ async function MAIN(): Promise<void>
 	}
 	else if (main.aux.action == 'm')
 	{
+		section_select_supplier.style.display = 'none';
+		section_select_products.style.display = 'block';
+
+		// Get purchase details
+		let purchase_header: any = (await main.querySQL(`SELECT * FROM PURCHASE WHERE ID_PURCHASE = ${main.aux.id};`)).rows[0];
+		let purchase_details: any[] = (await main.querySQL(`SELECT * FROM PURCHASE_DETAIL WHERE FK_PURCHASE = ${main.aux.id};`)).rows;
+
+		// Accept button
+		button_accept.addEventListener('click', async (): Promise<void> => {
+		
+		});
 
 	}
 }

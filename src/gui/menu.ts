@@ -188,10 +188,71 @@ button_query_order.addEventListener('click', (): void => {
 });
 
 /***** Purchase *****/
+let purchase = document.getElementById('purchase') as HTMLInputElement;
+let label_purchase = document.getElementById('label_purchase') as HTMLLabelElement;
+
+purchase.addEventListener('change', async (): Promise<void> => {
+
+	try {
+		let data = (await main.querySQL(`SELECT DATE, STATUS FROM PURCHASE WHERE ID_PURCHASE = ${purchase.value} AND NOT ID_PURCHASE = 0;`)).rows;
+
+		if (data.length == 0)
+			throw "compra no encontrada";
+
+		if (data[0].status == 'c')
+			throw "No puede editar un compra cancelada";
+
+		if (data[0].status == 'e')
+			throw "No puede editar un compra ya entregada";
+
+		label_purchase.innerHTML = (data[0].date as Date).toISOString().substring(0, 10) + ', ID:';
+		section_purchase.dataset.valid = '1';
+	}
+	catch (error: any){
+		label_purchase.innerHTML = error;
+		section_purchase.dataset.valid = '0';
+	}
+});
+
 let button_add_purchase = document.getElementById('button_add_purchase') as HTMLButtonElement;
 button_add_purchase.addEventListener('click', (): void => {
 	main.setProperty({action: 'a', id: '-1'}, 'aux');
 	main.createWindow(800, 600, 'gui/am_purchase.html', getCurrentWindow());
+});
+
+let button_modify_purchase = document.getElementById('button_modify_purchase') as HTMLButtonElement;
+button_modify_purchase.addEventListener('click', (): void => {
+
+	try {
+		if (section_purchase.dataset.valid == '0')
+			throw {message: "La compra seleccionada no es válida"};
+
+		main.setProperty({action: 'm', id: purchase.value}, 'aux');
+		main.createWindow(800, 600, 'gui/am_purchase.html', getCurrentWindow());
+	}
+	catch (error: any) {
+		console.log(error);
+		dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+	}
+});
+
+let button_select_purchase = document.getElementById('button_select_purchase') as HTMLButtonElement;
+button_select_purchase.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, column: 'purchase_p', canSelect: true}, 'aux');
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+	let code: string =
+	`
+	try
+	{
+		const remote_1 = require("@electron/remote");
+		const main = (0, remote_1.getGlobal)('main');
+		document.getElementById('purchase').value = main.aux.return.id_purchase;
+		document.getElementById('label_purchase').innerHTML = main.aux.return.date.toISOString().substring(0, 10) + ', ID:';
+		document.getElementById('section_purchase').dataset.valid = '1';
+	}
+	catch (error) {}
+	`;
+	queryWindow.setVar(code, 'codeCloseParent');
 });
 
 

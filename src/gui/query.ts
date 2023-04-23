@@ -42,6 +42,16 @@ switch (main.aux.column) {
 		visibleColumns = ['id_product_order', 'date', 'fk_store', 'fk_employee'];
 		matchRow = null;
 		break;
+		
+	case "purchase":
+		visibleColumns = ['id_purchase', 'date'];
+		matchRow = null;
+		break;
+
+	case "purchase_p":
+		visibleColumns = ['id_purchase', 'date'];
+		matchRow = null;
+		break;
 
 	case "sale":
 		visibleColumns = ['id_sale', 'date'];
@@ -83,6 +93,32 @@ async function search(): Promise<void>
 		else
 		{
 			query = `SELECT * FROM product_order WHERE STATUS = 'p';`;
+		}
+		break;
+
+	case "product_order":
+		if (isNumber)
+		{
+			query = `SELECT * FROM ${main.aux.column} WHERE `
+			+ `id_${main.aux.column} = ${parseInt(search_bar.value)}`
+			+ ` AND NOT id_${main.aux.column} = 0;`;
+		}
+		else
+		{
+			query = `SELECT * FROM ${main.aux.column};`;
+		}
+		break;
+
+	case "purchase_p":
+		if (isNumber)
+		{
+			query = `SELECT * FROM purchase WHERE `
+			+ `id_purchase = ${parseInt(search_bar.value)}`
+			+ ` AND NOT id_purchase = 0 AND STATUS = 'p';`;
+		}
+		else
+		{
+			query = `SELECT * FROM purchase WHERE STATUS = 'p';`;
 		}
 		break;
 

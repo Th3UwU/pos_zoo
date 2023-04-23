@@ -228,7 +228,7 @@ async function MAIN(): Promise<void>
 					${main.aux.id}, ${ap.dataset.idProduct}, ${(ap.querySelector('.amount') as HTMLInputElement).value});`);
 
 				// Aumentar stock local / reducir stock general
-				
+
 				if (status.selectedIndex == 1)
 				{
 					console.log(localStoreProducts);
@@ -240,7 +240,8 @@ async function MAIN(): Promise<void>
 							if (lsp.fk_product == ap.dataset.idProduct)
 								{idStoreProduct = lsp.id_store_product; break;}
 						}
-	
+						
+						// Increase local stock
 						if (idStoreProduct)
 						{
 							await main.querySQL(`UPDATE STORE_PRODUCT SET LOCAL_STOCK =
@@ -256,6 +257,11 @@ async function MAIN(): Promise<void>
 							${parseInt((ap.querySelector('.amount') as HTMLInputElement).value)}
 							);`);
 						}
+
+						// Decrease product stock
+						await main.querySQL(`UPDATE PRODUCT SET STOCK =
+						((SELECT STOCK FROM PRODUCT WHERE ID_PRODUCT = ${ap.dataset.idProduct}) - ${parseInt((ap.querySelector('.amount') as HTMLInputElement).value)})
+						WHERE ID_PRODUCT = ${ap.dataset.idProduct};`);
 					}
 				}
 
