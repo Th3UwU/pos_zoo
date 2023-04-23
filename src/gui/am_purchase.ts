@@ -21,6 +21,9 @@ let id_purchase = (document.getElementById('id_purchase') as HTMLInputElement);
 let selected_supplier = (document.getElementById('selected_supplier') as HTMLInputElement);
 let status = document.getElementById('status') as HTMLSelectElement;
 
+let button_accept = (document.getElementById('button_accept') as HTMLButtonElement);
+let button_cancel = (document.getElementById('button_cancel') as HTMLButtonElement);
+
 async function MAIN(): Promise<void>
 {
 	id_purchase.readOnly = true;
@@ -43,7 +46,11 @@ async function MAIN(): Promise<void>
 	status.add(option_c);
 
 	status.selectedIndex = 0;
-	///////////////////
+	
+	// Button cancel
+	button_cancel.addEventListener('click', () => {
+		getCurrentWindow().close();
+	});
 
 	if (main.aux.action == 'a')
 	{
@@ -123,7 +130,7 @@ async function MAIN(): Promise<void>
 
 		});
 
-		// Add product button
+		// Add product item button
 		select_add_product_button.addEventListener('click', async (): Promise<void> => {
 			
 			if (select_product_id.dataset.valid == '0')
@@ -134,6 +141,55 @@ async function MAIN(): Promise<void>
 
 			await addProductItem(parseInt(select_product_id.value), 1, 0);
 		});
+
+		// Accept button
+		button_accept.addEventListener('click', async (): Promise<void> => {
+
+			// Check at least 1 added element
+			let current_products_items = document.getElementsByClassName('product_item') as HTMLCollectionOf<HTMLDivElement>;
+			if (current_products_items.length == 0)
+			{
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: "Ingrese por lo menos 1 producto a la compra", type: "error"});
+				return;
+			}
+
+			// Verificar que no rebase el stock maximo
+			for (const pi of current_products_items)
+			{
+				let product_info: any = (await main.querySQL(`SELECT MAX_STOCK, STOCK FROM PRODUCT WHERE ID_PRODUCT = ${parseInt(pi.dataset.id)};`)).rows[0];
+				let current_stock: number = parseInt(product_info.stock);
+				let max_stock: number = parseInt(product_info.max_stock);
+				if ((current_stock + (pi.querySelector('.amount') as HTMLInputElement).valueAsNumber) > max_stock)
+				{
+					dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: `La cantidad del producto '${pi.querySelector('.name').innerHTML}' excede el stock maximo (${max_stock})`, type: "error"});
+					return;
+				}
+			}
+
+			try
+			{
+				// DB Query
+				await main.querySQL(`INSERT INTO PURCHASE VALUES(${new_id}, DEFAULT, DEFAULT);`);
+				for (const pi of current_products_items) {
+					await main.querySQL(`INSERT INTO PURCHASE_DETAIL VALUES(
+						(SELECT MAX(ID_PURCHASE_DETAIL) FROM PURCHASE_DETAIL) + 1,
+						${new_id},
+						${pi.dataset.id},
+						${(pi.querySelector('.amount') as HTMLInputElement).valueAsNumber},
+						${(pi.querySelector('.cost') as HTMLInputElement).valueAsNumber}
+					);`);
+				}
+
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Registro exitoso", type: "info"});
+				getCurrentWindow().close();
+			}
+			catch (error: any)
+			{
+				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+			}
+
+
+		})
 
 	}
 	else if (main.aux.action == 'm')

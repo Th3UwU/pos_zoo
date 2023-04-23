@@ -228,6 +228,7 @@ async function MAIN(): Promise<void>
 					${main.aux.id}, ${ap.dataset.idProduct}, ${(ap.querySelector('.amount') as HTMLInputElement).value});`);
 
 				// Aumentar stock local / reducir stock general
+				
 				if (status.selectedIndex == 1)
 				{
 					console.log(localStoreProducts);
