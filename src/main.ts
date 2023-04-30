@@ -19,7 +19,7 @@ class Main {
 		idEmployee: 0,
 		role: '',
 		idStore: 0
-	 });
+	});
 
 	constructor() {
 		app.on('window-all-closed', this.onWindowAllClosed.bind(this));

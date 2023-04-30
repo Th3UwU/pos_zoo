@@ -255,6 +255,37 @@ button_select_purchase.addEventListener('click', (): void => {
 	queryWindow.setVar(code, 'codeCloseParent');
 });
 
+/***** Return ******/
+
+// ADD
+let button_add_return = document.getElementById('button_add_return') as HTMLInputElement;
+let sale_return = document.getElementById('sale_return') as HTMLInputElement;
+
+button_add_return.addEventListener('click', async (): Promise<void> => 
+{
+	try {
+
+		let sale_entry: any[] = (await main.querySQL(`SELECT DATE FROM SALE WHERE ID_SALE = ${sale_return.value};`)).rows;
+		if (sale_entry.length == 0)
+			throw {message: "La venta no existe"};
+
+
+		let saleDate: Date = sale_entry[0].date;
+		let currentDate = new Date();
+		let daysPassed: number = Math.ceil((currentDate.getTime() - saleDate.getTime()) / (1000 * 3600 * 24));
+
+		if (daysPassed > 30)
+			throw {message: "Han pasado más de 30 días después de la venta"};
+
+		main.setProperty({action: 'a', id: '-1', sale_id: sale_return.value}, 'aux');
+		main.createWindow(800, 600, 'gui/am_return.html', getCurrentWindow());
+	}
+	catch (error: any){
+		console.log(error);
+		dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+	}
+});
+
 
 /***** Employee *****/
 let employee = document.getElementById('employee') as HTMLInputElement;
@@ -392,7 +423,7 @@ store.addEventListener('change', async (): Promise<void> => {
 
 	try {
 		let data = (await main.querySQL(`SELECT LOCATION, TYPE FROM STORE WHERE ID_STORE = ${store.value} AND NOT ID_STORE = 0;`)).rows[0];
-		label_store.innerHTML =  data.name + ', ID:';
+		label_store.innerHTML = data.location + ' - ' + data.type + ', ID:';
 		section_store.dataset.valid = '1';
 	}
 	catch (error: any){

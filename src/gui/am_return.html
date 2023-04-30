@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<title>Devolución</title>
+		<link rel="stylesheet" href="./am_return.css" type="text/css">
+	</head>
+	<body>
+
+		<template id="template_return_item">
+			<div class="return_item" data-id="0">
+
+				<span class="name"></span>
+				<input class="enable" type="checkbox" name="enable">
+				<label for="reason">Motivo</label>
+				<input class="reason" type="text">
+				<label for="amount">Cantidad a devolver</label>
+				<input class="amount" type="number">
+
+			</div>
+		</template>
+
+		<div id="container">
+
+			<label for="id_return">ID Devolución</label>
+			<input id="id_return" type="number">
+
+			<div id="return_item_container"></div>
+
+
+			<button id="buttonAccept" type="button">Aceptar</button>
+			<button id="buttonCancel" type="button">Cancelar</button>
+		</div>
+	</body>
+	<script style="display: none;">
+		require("./am_return.js")
+	</script>
+</html>

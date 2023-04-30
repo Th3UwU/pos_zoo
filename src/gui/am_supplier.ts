@@ -44,9 +44,10 @@ async function MAIN(): Promise<void> {
 	{
 		let new_id: number = (await main.querySQL(`SELECT MAX(ID_SUPPLIER) FROM SUPPLIER;`)).rows[0].max;
 		new_id++;
-
 		id_supplier.readOnly = true;
 		id_supplier.value = `${new_id}`;
+
+		status.disabled = true;
 
 		buttonAccept.addEventListener('click', async (): Promise<void> => {
 
