@@ -384,7 +384,6 @@ button_query_product.addEventListener('click', (): void => {
 	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
 });
 
-
 /***** Store *****/
 let store = document.getElementById('store') as HTMLInputElement;
 let label_store = document.getElementById('label_store') as HTMLLabelElement;
@@ -449,4 +448,66 @@ button_query_store.addEventListener('click', (): void => {
 	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
 });
 
+/***** Supplier *****/
+let supplier = document.getElementById('supplier') as HTMLInputElement;
+let label_supplier = document.getElementById('label_supplier') as HTMLLabelElement;
 
+supplier.addEventListener('change', async (): Promise<void> => {
+
+	try {
+		let data = (await main.querySQL(`SELECT NAME FROM SUPPLIER WHERE ID_SUPPLIER = ${supplier.value} AND NOT ID_SUPPLIER = 0;`)).rows[0];
+		label_supplier.innerHTML = data.name + ', ID:';
+		section_supplier.dataset.valid = '1';
+	}
+	catch (error: any){
+		label_supplier.innerHTML = 'Proveedor no encontrado';
+		section_supplier.dataset.valid = '0';
+	}
+});
+
+let button_add_supplier = document.getElementById('button_add_supplier') as HTMLButtonElement;
+button_add_supplier.addEventListener('click', (): void => {
+	main.setProperty({action: 'a', id: '-1'}, 'aux');
+	main.createWindow(800, 600, 'gui/am_supplier.html', getCurrentWindow());
+});
+
+let button_modify_supplier = document.getElementById('button_modify_supplier') as HTMLButtonElement;
+button_modify_supplier.addEventListener('click', (): void => {
+
+	try {
+		if (section_supplier.dataset.valid == '0')
+			throw {message: "El proveedor seleccionado no es válido"};
+
+		main.setProperty({action: 'm', id: supplier.value}, 'aux');
+		main.createWindow(800, 600, 'gui/am_supplier.html', getCurrentWindow());
+	}
+	catch (error: any) {
+		console.log(error);
+		dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
+	}
+});
+
+let button_select_supplier = document.getElementById('button_select_supplier') as HTMLButtonElement;
+button_select_supplier.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, column: 'supplier', canSelect: true}, 'aux');
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+	let code: string =
+	`
+	try
+	{
+		const remote_1 = require("@electron/remote");
+		const main = (0, remote_1.getGlobal)('main');
+		document.getElementById('supplier').value = main.aux.return.id_supplier;
+		document.getElementById('label_supplier').innerHTML = main.aux.return.name + ', ID:';
+		document.getElementById('section_supplier').dataset.valid = '1';
+	}
+	catch (error) {}
+	`;
+	queryWindow.setVar(code, 'codeCloseParent');
+});
+
+let button_query_supplier = document.getElementById('button_query_supplier') as HTMLButtonElement;
+button_query_supplier.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, column: 'supplier', canSelect: false}, 'aux');
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+});

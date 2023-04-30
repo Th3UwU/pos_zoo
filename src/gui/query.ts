@@ -57,6 +57,11 @@ switch (main.aux.column) {
 		visibleColumns = ['id_sale', 'date'];
 		matchRow = null;
 		break;
+
+	case "supplier":
+		visibleColumns = ['id_supplier', 'name', 'tel'];
+		matchRow = null;
+		break;
 };
 
 let search_bar = document.getElementById('search_bar') as HTMLInputElement;

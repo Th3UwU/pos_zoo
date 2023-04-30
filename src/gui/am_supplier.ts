@@ -4,8 +4,8 @@ import { readFileSync } from 'fs';
 import Main from '../main';
 
 let main: Main = getGlobal('main');
-let aux: any = getGlobal('aux');
 
+let id_supplier = document.getElementById('id_supplier') as HTMLInputElement;
 let name = document.getElementById('name') as HTMLInputElement;
 let address = document.getElementById('address') as HTMLInputElement;
 let tel = document.getElementById('tel') as HTMLInputElement;
@@ -40,13 +40,26 @@ buttonCancel.addEventListener('click', (): void => {
 
 async function MAIN(): Promise<void> {
 	// Add new supplier
-	if (aux.action == 'a')
+	if (main.aux.action == 'a')
 	{
+		let new_id: number = (await main.querySQL(`SELECT MAX(ID_SUPPLIER) FROM SUPPLIER;`)).rows[0].max;
+		new_id++;
+
+		id_supplier.readOnly = true;
+		id_supplier.value = `${new_id}`;
+
 		buttonAccept.addEventListener('click', async (): Promise<void> => {
 
 			try {
-				let imageRaw: string = readFileSync(imagePath.value, null).toString('base64');
-				let query: string = `INSERT INTO SUPPLIER VALUES((SELECT MAX(ID_SUPPLIER) FROM SUPPLIER) + 1, '${name.value}', '${address.value}', ${tel.value}, (DECODE('${imageRaw}', 'base64')), DEFAULT);`;
+
+				let imageRaw: string = null;
+				if (imagePath.value)
+					imageRaw = readFileSync(imagePath.value, null).toString('base64');
+
+				let query: string = `INSERT INTO SUPPLIER VALUES(
+					${new_id}, '${name.value}', '${address.value}',
+					${tel.value}, ` + ((imageRaw) ? (`(DECODE('${imageRaw}', 'base64')), DEFAULT);`) : (`DEFAULT, DEFAULT);`));
+
 				console.log(query);
 				await main.querySQL(query);
 				dialog.showMessageBoxSync(getCurrentWindow(), {title: "Éxito", message: "Registro exitoso", type: "info"});
@@ -60,12 +73,13 @@ async function MAIN(): Promise<void> {
 		});
 	}
 	// Modify supplier
-	else if (aux.action == 'm')
+	else if (main.aux.action == 'm')
 	{
 		// Get entry to modify
-		let supplier: any = (await main.querySQL(`SELECT * FROM SUPPLIER WHERE id_supplier = ${aux.id};`)).rows[0];
+		let supplier: any = (await main.querySQL(`SELECT * FROM SUPPLIER WHERE id_supplier = ${main.aux.id};`)).rows[0];
 
 		// Populate inputs with existing info
+		id_supplier.value = supplier.id_supplier;
 		name.value = supplier.name;
 		address.value = supplier.address;
 		tel.value = supplier.tel;
@@ -91,7 +105,7 @@ async function MAIN(): Promise<void> {
 				`UPDATE SUPPLIER SET
 				name = '${name.value}', address = '${address.value}',
 				tel = '${tel.value}', status = '${status.checked}'`
-				+ ((imageRaw) ? (`, image = (DECODE('${imageRaw}', 'base64')) WHERE id_supplier = ${aux.id};`) : (` WHERE id_supplier = ${aux.id};`));				
+				+ ((imageRaw) ? (`, image = (DECODE('${imageRaw}', 'base64')) WHERE id_supplier = ${main.aux.id};`) : (` WHERE id_supplier = ${main.aux.id};`));				
 
 				console.log(query);
 				await main.querySQL(query);
