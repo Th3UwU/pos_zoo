@@ -265,6 +265,9 @@ button_add_return.addEventListener('click', async (): Promise<void> =>
 {
 	try {
 
+		if (section_return.dataset.valid == '0')
+			throw {message: "venta inválida"};
+
 		let sale_entry: any[] = (await main.querySQL(`SELECT DATE FROM SALE WHERE ID_SALE = ${sale_return.value};`)).rows;
 		if (sale_entry.length == 0)
 			throw {message: "La venta no existe"};
@@ -284,6 +287,26 @@ button_add_return.addEventListener('click', async (): Promise<void> =>
 		console.log(error);
 		dialog.showMessageBoxSync(getCurrentWindow(), {title: "Error", message: error.message, type: "error"});
 	}
+});
+
+let label_return = document.getElementById('label_return') as HTMLLabelElement;
+sale_return.addEventListener('change', async (): Promise<void> => {
+
+	try {
+		let data = (await main.querySQL(`SELECT DATE FROM SALE WHERE ID_SALE = ${sale_return.value} AND NOT ID_SALE = 0;`)).rows[0];
+		label_return.innerHTML = (data.date as Date).toISOString().substring(0, 10) + ', ID Venta';
+		section_return.dataset.valid = '1';
+	}
+	catch (error: any){
+		label_return.innerHTML = 'Venta no encontrada';
+		section_return.dataset.valid = '0';
+	}
+});
+
+let button_query_return = document.getElementById('button_query_return') as HTMLButtonElement;
+button_query_return.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, column: 'return', canSelect: false}, 'aux');
+	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
 });
 
 
