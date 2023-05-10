@@ -14,7 +14,7 @@ switch (main.aux.column) {
 		break;
 
 	case "supplier":
-		visibleColumns = ['id_supplier', 'name'];
+		visibleColumns = ['id_supplier', 'name', 'tel', 'address', 'image'];
 		matchRow = 'name';
 		break;
 
@@ -55,11 +55,6 @@ switch (main.aux.column) {
 
 	case "sale":
 		visibleColumns = ['id_sale', 'date'];
-		matchRow = null;
-		break;
-
-	case "supplier":
-		visibleColumns = ['id_supplier', 'name', 'tel'];
 		matchRow = null;
 		break;
 

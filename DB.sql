@@ -23,9 +23,9 @@ CREATE TABLE SUPPLIER
 
 -- SUPPLIER EXAMPLES
 INSERT INTO SUPPLIER VALUES(0, 'DEFAULT', DEFAULT, DEFAULT, DEFAULT);
-INSERT INTO SUPPLIER VALUES((SELECT MAX(ID_SUPPLIER) FROM SUPPLIER) + 1, 'Distrito Max', 'Calle Norte sur 4 Juguetimax, Alce Blanco, 53370 Naucalpan de Juárez, Méx.', 5585268273, DEFAULT);
-INSERT INTO SUPPLIER VALUES((SELECT MAX(ID_SUPPLIER) FROM SUPPLIER) + 1, 'Nu Promo', 'Av Guadalupe 4279, Cd de los Niños, 45040 Zapopan, Jal.', 423423423, DEFAULT);
-INSERT INTO SUPPLIER VALUES((SELECT MAX(ID_SUPPLIER) FROM SUPPLIER) + 1, 'Jugueteria la loba', 'C. Liceo 240, Zona Centro, 44100 Guadalajara, Jal.', 442342, DEFAULT);
+INSERT INTO SUPPLIER VALUES(1, 'Distrito Max', 'Calle Norte sur 4 Juguetimax, Alce Blanco, 53370 Naucalpan de Juárez, Méx.', 5585268273, DEFAULT);
+INSERT INTO SUPPLIER VALUES(2, 'Nu Promo', 'Av Guadalupe 4279, Cd de los Niños, 45040 Zapopan, Jal.', 423423423, DEFAULT);
+INSERT INTO SUPPLIER VALUES(3, 'Jugueteria la loba', 'C. Liceo 240, Zona Centro, 44100 Guadalajara, Jal.', 442342, DEFAULT);
 
 -- PRODUCT TABLE
 CREATE TABLE PRODUCT
@@ -52,21 +52,21 @@ CREATE TABLE PRODUCT
 INSERT INTO PRODUCT VALUES(0, 0, 'DEFAULT', 'DEFAULT', 0.0, 'DEFAULT', 0, 0, 0, DEFAULT, DEFAULT);
 
 -- a
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 3, 'Peluche de león', 'Es un peluche de león', 150.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 3, 'Peluche de flamingo', 'Es un peluche de flamingo', 90.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 3, 'Peluche de tigre', 'Es un peluche de tigre', 130.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 3, 'Peluche de leon marino', 'Es un peluche de un leon marino', 70.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 3, 'Peluche de mono', 'Es un peluche de un mono', 90.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES(1, 3, 'Peluche de león', 'Es un peluche de león', 150.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES(2, 3, 'Peluche de flamingo', 'Es un peluche de flamingo', 90.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES(3, 3, 'Peluche de tigre', 'Es un peluche de tigre', 130.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES(4, 3, 'Peluche de leon marino', 'Es un peluche de un leon marino', 70.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES(5, 3, 'Peluche de mono', 'Es un peluche de un mono', 90.0, 'peluche', 25, 100, 10, DEFAULT, DEFAULT);
 
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 2, 'Rompecabezas animales', 'Juguete educativo rompecabezas animales', 200.0, 'juguete', 25, 100, 10, DEFAULT, DEFAULT);
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 2, 'Libro actividades', 'Libro de actividades de animales', 180.0, 'juguete', 25, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES(6, 2, 'Rompecabezas animales', 'Juguete educativo rompecabezas animales', 200.0, 'juguete', 25, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES(7, 2, 'Libro actividades', 'Libro de actividades de animales', 180.0, 'juguete', 25, 100, 10, DEFAULT, DEFAULT);
 
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 2, 'Animales y su alimentación', 'Enciclopedia de animales y sus alimentos', 250.0, 'libro', 45, 100, 10, DEFAULT, DEFAULT);
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 1, 'La vida secreta de los animales', 'Descrube las maravillas del mundo animal', 170.0, 'libro', 45, 100, 10, DEFAULT, DEFAULT);
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 1, 'Animales asombrosos', 'juego de construcción en el que los niños pueden crear sus propios animales a partir de piezas desmontables', 120.5, 'libro', 45, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES(8, 2, 'Animales y su alimentación', 'Enciclopedia de animales y sus alimentos', 250.0, 'libro', 45, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES(9, 1, 'La vida secreta de los animales', 'Descrube las maravillas del mundo animal', 170.0, 'libro', 45, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES(10, 1, 'Animales asombrosos', 'juego de construcción en el que los niños pueden crear sus propios animales a partir de piezas desmontables', 120.5, 'libro', 45, 100, 10, DEFAULT, DEFAULT);
 
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 1, 'Camisa tigre', 'Camisa estandar con estampado de tigre', 250.0, 'ropa', 45, 100, 10, DEFAULT, DEFAULT);
-INSERT INTO PRODUCT VALUES((SELECT MAX(ID_PRODUCT) FROM PRODUCT) + 1, 1, 'Camisa de animales', 'Camisa estandar con estampado de animales', 200.0, 'ropa', 45, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES(11, 1, 'Camisa tigre', 'Camisa estandar con estampado de tigre', 250.0, 'ropa', 45, 100, 10, DEFAULT, DEFAULT);
+INSERT INTO PRODUCT VALUES(12, 1, 'Camisa de animales', 'Camisa estandar con estampado de animales', 200.0, 'ropa', 45, 100, 10, DEFAULT, DEFAULT);
 
 -- STORE
 CREATE TABLE STORE
