@@ -1,0 +1,22 @@
+.sale {
+	border: 2px solid red;
+	border-radius: 6PX;
+	margin: 10px;
+	font-family: 'Times New Roman', Times, serif;
+	font-weight: normal;
+	font-size: 18px;
+}
+
+.sale_detail {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	font-style: italic;
+	margin: 4px 50px 4px 50px;
+}
+
+img {
+	width: 80px;
+	display: block;
+}
+
+

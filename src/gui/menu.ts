@@ -102,8 +102,7 @@ button_select_sale.addEventListener('click', (): void => {
 
 let button_query_sale = document.getElementById('button_query_sale') as HTMLButtonElement;
 button_query_sale.addEventListener('click', (): void => {
-	main.setProperty({...main.aux, column: 'sale', canSelect: false}, 'aux');
-	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+	main.createWindow(800, 600, 'gui/query_sale.html', getCurrentWindow());
 });
 
 
