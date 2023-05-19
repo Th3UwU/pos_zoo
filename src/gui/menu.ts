@@ -254,6 +254,18 @@ button_select_purchase.addEventListener('click', (): void => {
 	queryWindow.setVar(code, 'codeCloseParent');
 });
 
+let button_query_purchase_p = document.getElementById('button_query_purchase_p') as HTMLButtonElement;
+button_query_purchase_p.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, pending: true}, 'aux');
+	main.createWindow(800, 600, 'gui/query_purchase.html', getCurrentWindow());
+});
+
+let button_query_purchase = document.getElementById('button_query_purchase') as HTMLButtonElement;
+button_query_purchase.addEventListener('click', (): void => {
+	main.setProperty({...main.aux, pending: false}, 'aux');
+	main.createWindow(800, 600, 'gui/query_purchase.html', getCurrentWindow());
+});
+
 /***** Return ******/
 
 // ADD

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<title>Consultar pedidos</title>
+		<link rel="stylesheet" href="./query_purchase.css" type="text/css">
+	</head>
+	<body>
+		<template id="template_purchase">
+			<div class="purchase">
+				<span class="id_purchase"></span>
+				<span class="date"></span>
+				<span class="supplier"></span>
+				<span class="status"></span>
+
+				<div class="purchase_details"></div>
+			</div>
+		</template>
+
+		<template id="template_purchase_detail">
+			<div class="purchase_detail">
+				<span class="id_product"></span>
+				<span class="product_name"></span>
+				<span class="amount"></span>
+				<span class="cost"></span>
+				<img class="image" src="">
+			</div>
+		</template>
+		
+		<div id="container">
+
+			<label for="search_bar">Buscar:</label>
+			<input id="search_bar" type="text"></input>
+
+			<div id="purchase_container"></div>
+
+		</div>
+	</body>
+	<script style="display: none;">
+		require("./query_purchase.js")
+	</script>
+</html>
