@@ -176,14 +176,14 @@ button_select_order.addEventListener('click', (): void => {
 
 let button_query_order_p = document.getElementById('button_query_order_p') as HTMLButtonElement;
 button_query_order_p.addEventListener('click', (): void => {
-	main.setProperty({...main.aux, column: 'product_order_p', canSelect: false}, 'aux');
-	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+	main.setProperty({...main.aux, pending: true}, 'aux');
+	main.createWindow(800, 600, 'gui/query_order.html', getCurrentWindow());
 });
 
 let button_query_order = document.getElementById('button_query_order') as HTMLButtonElement;
 button_query_order.addEventListener('click', (): void => {
-	main.setProperty({...main.aux, column: 'product_order', canSelect: false}, 'aux');
-	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+	main.setProperty({...main.aux, pending: false}, 'aux');
+	main.createWindow(800, 600, 'gui/query_order.html', getCurrentWindow());
 });
 
 /***** Purchase *****/

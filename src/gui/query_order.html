@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<title>Consultar pedidos</title>
+		<link rel="stylesheet" href="./query_order.css" type="text/css">
+	</head>
+	<body>
+		<template id="template_order">
+			<div class="order">
+				<span class="id_order"></span>
+				<span class="date"></span>
+				<span class="employee"></span>
+				<span class="store"></span>
+				<span class="status"></span>
+
+				<div class="order_details"></div>
+			</div>
+		</template>
+
+		<template id="template_order_detail">
+			<div class="order_detail">
+				<span class="id_product"></span>
+				<span class="product_name"></span>
+				<span class="amount"></span>
+				<img class="image" src="">
+			</div>
+		</template>
+		
+		<div id="container">
+
+			<label for="search_bar">Buscar:</label>
+			<input id="search_bar" type="text"></input>
+
+			<div id="order_container"></div>
+
+		</div>
+	</body>
+	<script style="display: none;">
+		require("./query_order.js")
+	</script>
+</html>
