@@ -316,8 +316,7 @@ sale_return.addEventListener('change', async (): Promise<void> => {
 
 let button_query_return = document.getElementById('button_query_return') as HTMLButtonElement;
 button_query_return.addEventListener('click', (): void => {
-	main.setProperty({...main.aux, column: 'return', canSelect: false}, 'aux');
-	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+	main.createWindow(800, 600, 'gui/query_return.html', getCurrentWindow());
 });
 
 

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<title>Consultar pedidos</title>
+		<link rel="stylesheet" href="./query_return.css" type="text/css">
+	</head>
+	<body>
+		<template id="template_return">
+			<div class="return">
+				<span class="id_return"></span>
+				<span class="id_sale"></span>
+				<span class="date"></span>
+
+				<div class="return_details"></div>
+			</div>
+		</template>
+
+		<template id="template_return_detail">
+			<div class="return_detail">
+				<span class="id_product"></span>
+				<span class="product_name"></span>
+				<span class="amount"></span>
+				<span class="reason"></span>
+			</div>
+		</template>
+		
+		<div id="container">
+
+			<label for="search_bar">Buscar:</label>
+			<input id="search_bar" type="text"></input>
+
+			<div id="return_container"></div>
+
+		</div>
+	</body>
+	<script style="display: none;">
+		require("./query_return.js")
+	</script>
+</html>
