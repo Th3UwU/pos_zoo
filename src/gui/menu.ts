@@ -508,8 +508,7 @@ button_select_store.addEventListener('click', (): void => {
 
 let button_query_store = document.getElementById('button_query_store') as HTMLButtonElement;
 button_query_store.addEventListener('click', (): void => {
-	main.setProperty({...main.aux, column: 'store', canSelect: false}, 'aux');
-	let queryWindow = main.createWindow(800, 600, 'gui/query.html', getCurrentWindow());
+	main.createWindow(800, 600, 'gui/query_store.html', getCurrentWindow());
 });
 
 /***** Supplier *****/

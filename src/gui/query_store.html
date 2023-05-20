@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<title>Consultar local</title>
+		<link rel="stylesheet" href="./query_store.css" type="text/css">
+	</head>
+	<body>
+		<template id="template_store">
+			<div class="store">
+				<span class="id_store"></span>
+				<span class="location"></span>
+				<span class="type"></span>
+				<span class="hours"></span>
+
+				<div class="store_details"></div>
+			</div>
+		</template>
+
+		<template id="template_store_detail">
+			<div class="store_detail">
+				<span class="id_product"></span>
+				<span class="product_name"></span>
+				<span class="amount"></span>
+				<span class="local_stock"></span>
+				<img class="image" src="">
+			</div>
+		</template>
+		
+		<div id="container">
+
+			<label for="search_bar">Buscar:</label>
+			<input id="search_bar" type="text"></input>
+
+			<div id="store_container"></div>
+
+		</div>
+	</body>
+	<script style="display: none;">
+		require("./query_store.js")
+	</script>
+</html>
