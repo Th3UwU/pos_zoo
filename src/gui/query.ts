@@ -174,7 +174,7 @@ async function search(): Promise<void>
 	
 	default:
 		query = `SELECT * FROM ${main.aux.column} WHERE ` +
-		((isNumber) ? (`id_${main.aux.column} = ${parseInt(search_bar.value)};`) : (`LOWER(${matchRow}) LIKE LOWER('%${search_bar.value}%')`))
+		((isNumber) ? (`id_${main.aux.column} = ${parseInt(search_bar.value)}`) : (`LOWER(${matchRow}) LIKE LOWER('%${search_bar.value}%')`))
 		+ ` AND NOT id_${main.aux.column} = 0;`;
 		break;
 	}
