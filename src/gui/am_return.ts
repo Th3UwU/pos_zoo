@@ -109,6 +109,12 @@ async function MAIN(): Promise<void> {
 							{r_item = j; break;}
 					}
 
+					if ((i.querySelector('.amount') as HTMLInputElement).valueAsNumber == 0)
+					{
+						let product_name: string = (await main.querySQL(`SELECT NAME FROM PRODUCT WHERE ID_PRODUCT = ${r_item.idProduct};`)).rows[0].name;
+						throw {message: `Debe devolver al menos 1 unidad de: '${product_name}'`};
+					}
+
 					if ((parseInt((i.querySelector('.amount') as HTMLInputElement).value) + r_item.amount) > r_item.total)
 					{
 						let product_name: string = (await main.querySQL(`SELECT NAME FROM PRODUCT WHERE ID_PRODUCT = ${r_item.idProduct};`)).rows[0].name;
@@ -129,7 +135,7 @@ async function MAIN(): Promise<void> {
 						'${(i.querySelector('.reason') as HTMLInputElement).value}');`);
 
 					// AUmentar stock local
-					let temp = (await main.querySQL(`SELECT * FROM STORE_PRODUCT WHERE FK_PRODUCT = ${i.dataset.id};`)).rows;
+					let temp = (await main.querySQL(`SELECT * FROM STORE_PRODUCT WHERE FK_PRODUCT = ${i.dataset.id} AND FK_STORE = ${main.credentials.idStore};`)).rows;
 					if (temp.length == 0)
 					{
 						await main.querySQL(`INSERT INTO STORE_PRODUCT VALUES(
@@ -143,7 +149,7 @@ async function MAIN(): Promise<void> {
 					{
 						await main.querySQL(`UPDATE STORE_PRODUCT SET LOCAL_STOCK =
 						${parseInt(temp[0].local_stock) + parseInt((i.querySelector('.amount') as HTMLInputElement).value)}
-						WHERE ID_STORE_PRODUCT = ${temp[0].id_store_product};`);
+						WHERE ID_STORE_PRODUCT = ${temp[0].id_store_product} AND FK_STORE = ${main.credentials.idStore};`);
 					}
 				}
 
