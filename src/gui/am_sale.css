@@ -65,9 +65,13 @@ button:active {
 	padding: 3px;
 }
 
-span {
+span, pre {
 	color: lightgray;
 	display: block;
+}
+
+pre {
+	margin: 0;
 }
 
 .detail {

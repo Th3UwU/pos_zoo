@@ -263,11 +263,15 @@ async function MAIN(): Promise<void> {
 			dateEmployeeInfo.innerHTML = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} Atendido por: ${employeeEntry.first_name}`;
 			section_ticket.appendChild(dateEmployeeInfo);
 
+			let columns = document.createElement('pre') as HTMLPreElement;
+			columns.innerHTML = `CANT\t\t\t\tPRODUCTO\t\t\tPRECIO\t\t\tIMPORTE`;
+			section_ticket.appendChild(columns);
+
 			for (const p of shoppingCart) {
 
 				let productEntry: any = (await main.querySQL(`SELECT * FROM PRODUCT WHERE id_product = ${p.idProduct};`)).rows[0];
-				let item = document.createElement('span') as HTMLSpanElement;
-				item.innerHTML = `${p.amount} X ${productEntry.name} ---------- ${productEntry.price * p.amount}`;
+				let item = document.createElement('pre') as HTMLPreElement;
+				item.innerHTML = `${p.amount}\t\t\t\t\t${productEntry.name}\t\t\t$${productEntry.price}\t\t\t$${productEntry.price * p.amount}`;
 				section_ticket.appendChild(item);
 			}
 
