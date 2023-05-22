@@ -31,8 +31,6 @@ async function main()
 	];
 
 	let product_index = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
-
 	for (let i = 0; i < product_img.length; i++)
 	{
 		data = fs.readFileSync(product_img[i], null).toString("base64");
@@ -51,6 +49,22 @@ async function main()
 	{
 		data = fs.readFileSync(supplier_img[i], null).toString("base64");
 		await client.query(`UPDATE SUPPLIER SET IMAGE = (DECODE('${data}', 'base64')) WHERE ID_SUPPLIER = ${supplier_index[i]};`);
+	}
+
+	let employee_cv =
+	[
+		"./res/cv/cv_01.pdf",
+		"./res/cv/cv_02.pdf",
+		"./res/cv/cv_03.pdf",
+		"./res/cv/cv_04.pdf",
+		"./res/cv/cv_05.pdf"
+	];
+
+	let employee_index = [1, 2, 3, 4, 5];
+	for (let i = 0; i < employee_cv.length; i++)
+	{
+		data = fs.readFileSync(employee_cv[i], null).toString("base64");
+		await client.query(`UPDATE EMPLOYEE SET CV = (DECODE('${data}', 'base64')) WHERE ID_EMPLOYEE = ${employee_index[i]};`);
 	}
 
 

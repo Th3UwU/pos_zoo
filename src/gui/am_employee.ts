@@ -101,8 +101,7 @@ async function MAIN(): Promise<void> {
 		buttonCVPreview.addEventListener('click', (): void => {
 
 			if (CVPath.value != "") {
-				let newAux = {...main.aux, url: CVPath.value};
-				main.setGlobal(newAux, 'aux');
+				main.setProperty({...main.aux, url: CVPath.value}, 'aux');
 				main.createWindow(800, 600, 'gui/pdf_viewer.html', getCurrentWindow());
 			}
 			else {
@@ -132,15 +131,13 @@ async function MAIN(): Promise<void> {
 		buttonCVPreview.addEventListener('click', (): void => {
 
 			if (CVPath.value != "") {
-				let newAux = {...main.aux, url: CVPath.value};
-				main.setGlobal(newAux, 'aux');
+				main.setProperty({...main.aux, url: CVPath.value}, 'aux');
 				main.createWindow(800, 600, 'gui/pdf_viewer.html', getCurrentWindow());
 			}
 			else if (employee.cv) {
 				let pdfFileUrl = URL.createObjectURL(new Blob([employee.cv.buffer], {type: 'application/pdf'}));
 
-				let newAux = {...main.aux, url: pdfFileUrl};
-				main.setGlobal(newAux, 'aux');
+				main.setProperty({...main.aux, url: pdfFileUrl}, 'aux');
 				main.createWindow(800, 600, 'gui/pdf_viewer.html', getCurrentWindow());
 			}
 			else {
