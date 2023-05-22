@@ -32,7 +32,7 @@ export default class Window {
 		this.window.on('closed', this.onClosed.bind(this));
 		this.window.once('ready-to-show', () => {
 			this.window.show();
-			this.window.webContents.openDevTools();
+			// this.window.webContents.openDevTools();
 		});
 
 		enable(this.window.webContents);
